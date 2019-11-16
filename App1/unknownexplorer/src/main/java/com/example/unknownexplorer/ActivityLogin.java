@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class Activity_login extends AppCompatActivity implements View.OnClickListener {
+public class ActivityLogin extends AppCompatActivity implements View.OnClickListener {
     TextView inputLogin;
     TextView inputPassword;
     DBHelper dbHelper;
@@ -49,7 +49,7 @@ public class Activity_login extends AppCompatActivity implements View.OnClickLis
 
 
                 Log.d("test","HELLO from Login");
-                intent = new Intent("MainNavigation");
+                intent = new Intent("ActivityMainNavigation");
                 startActivity(intent);
                 break;
             case R.id.txRegistration:
@@ -59,7 +59,10 @@ public class Activity_login extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        
+    }
 
     class DBHelper extends SQLiteOpenHelper {
 

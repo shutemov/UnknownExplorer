@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class Activity_registration extends AppCompatActivity implements View.OnClickListener {
+public class ActivityRegistration extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,7 @@ public class Activity_registration extends AppCompatActivity implements View.OnC
         Intent intent;
         switch(v.getId()){
             case R.id.btnRegistration:
-                intent = new Intent("ActivityMainScreenApp");
+                intent = new Intent(this,ActivityLogin.class);
                 startActivity(intent);
                 break;
         }

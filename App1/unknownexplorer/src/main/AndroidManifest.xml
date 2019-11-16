@@ -10,23 +10,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainNavigation"
-            android:label="@string/title_activity_main_navigation"
+            android:name=".ActivityMainNavigation"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="MainNavigation"></action>
+                <action android:name="ActivityMainNavigation"></action>
                 <category android:name="android.intent.category.DEFAULT"></category>
             </intent-filter>
 
         </activity>
-        <activity android:name=".Activity_registration">
+        <activity android:name=".ActivityRegistration">
             <intent-filter>
                 <action android:name="ActivityRegistration" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity_login">
+        <activity android:name=".ActivityLogin">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

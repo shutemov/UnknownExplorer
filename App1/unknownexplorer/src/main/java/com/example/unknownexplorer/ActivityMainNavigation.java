@@ -25,7 +25,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 
-public class MainNavigation extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class ActivityMainNavigation extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -60,7 +60,7 @@ public class MainNavigation extends AppCompatActivity implements NavigationView.
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
 
@@ -81,14 +81,20 @@ public class MainNavigation extends AppCompatActivity implements NavigationView.
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        Log.d("test",""+menuItem.getItemId());
-
+        Log.d("test","111");
+        switch (menuItem.getItemId()){
+            case R.id.nav_gallery:{
+                Intent intent = new Intent(this,ActivityLogin.class);
+                startActivity(intent);
+                break;
+            }
+        }
         return false;
     }
 
     @Override
     public void onBackPressed() {
-       Log.d("test","on back Pressed");
+       Log.d("test","on back Pressedddd");
     }
 
 }
