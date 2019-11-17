@@ -1,28 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout_item"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="150dp"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_title_router"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:text="TextView"
-        tools:layout_conversion_absoluteHeight="136dp"
-        tools:layout_conversion_absoluteWidth="0dp"
-        tools:layout_editor_absoluteX="558dp"
-        tools:layout_editor_absoluteY="0dp" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_desctiption_router"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_conversion_absoluteHeight="136dp"
-        tools:layout_conversion_absoluteWidth="0dp"
-        tools:layout_editor_absoluteX="558dp"
-        tools:layout_editor_absoluteY="8dp" />
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_interest_router" />
+
+        <ImageView
+            android:id="@+id/image_pic_router"
+            android:layout_width="124dp"
+            android:layout_height="97dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@android:drawable/ic_menu_mapmode" />
+
+        <TextView
+            android:id="@+id/text_title_router"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/image_pic_router"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_conversion_absoluteHeight="136dp"
+            tools:layout_conversion_absoluteWidth="0dp" />
+
+        <TextView
+            android:id="@+id/text_description_router"
+            android:layout_width="0dp"
+            android:layout_height="69dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/text_title_router"
+            app:layout_constraintTop_toBottomOf="@+id/text_title_router"
+            tools:layout_conversion_absoluteHeight="136dp"
+            tools:layout_conversion_absoluteWidth="0dp" />
+
+        <TextView
+            android:id="@+id/text_interest_router"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Interes"
+            app:layout_constraintStart_toStartOf="@+id/text_description_router"
+            app:layout_constraintTop_toBottomOf="@+id/text_description_router" />
+
+        <TextView
+            style="Lab"
+            android:id="@+id/text_type_router"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:text="type"
+            app:layout_constraintStart_toEndOf="@+id/text_interest_router"
+            app:layout_constraintTop_toBottomOf="@+id/text_description_router" />
+
+        <TextView
+            android:id="@+id/text_time_router"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:text="time"
+            app:layout_constraintStart_toEndOf="@+id/text_type_router"
+            app:layout_constraintTop_toBottomOf="@+id/text_description_router" />
+
+        <TextView
+            android:id="@+id/text_rating_router"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:text="rating"
+            app:layout_constraintStart_toEndOf="@+id/text_time_router"
+            app:layout_constraintTop_toBottomOf="@+id/text_description_router" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </LinearLayout>

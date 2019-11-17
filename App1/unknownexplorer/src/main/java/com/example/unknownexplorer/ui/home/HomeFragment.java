@@ -34,12 +34,16 @@ public class HomeFragment extends Fragment {
     private Collection<Router> getRouters() {
         Log.d("test","getRouters  from home fragment");
         return Arrays.asList(
-                new Router("титле1", "описани1"),
-                new Router("титле2", "описани2"),
-                new Router("титле3", "описани3"),
-                new Router("титле4", "описани4"),
-                new Router("титле5", "описани5"),
-                new Router("титле6", "описани6")
+                new Router("чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5"),
+                new Router("чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;lorem impusmdssdlkf;ldsk fldsk;lfksd;lorem impusmdssdlkf;ldsk fldsk;lfksd;lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5"),
+                new Router("чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5"),
+                new Router("чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5"),
+                new Router("чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5"),
+                new Router("чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5"),
+                new Router("чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5"),
+                new Router("чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5"),
+                new Router("чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5")
+
         );
     }
 
