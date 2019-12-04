@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="interestList">
+        <item>Photo</item>
+        <item>Football</item>
+        <item>Music</item>
+        <item>Evening walking</item>
+    </string-array>
+</resources>

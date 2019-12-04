@@ -1,6 +1,5 @@
-package com.example.unknownexplorer.adapter;
+package com.example.unknownexplorer.adapters.allRoutesAdapters;
 
-import android.content.res.Resources;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.unknownexplorer.R;
+import com.example.unknownexplorer.models.Route;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +26,7 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.RoutesView
     public RoutesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d("test","onCreateViewHolder from RoutersAdapter");
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycler_item, parent, false);
+                .inflate(R.layout.recycler_item_all_routes, parent, false);
         return new RoutesViewHolder(view);
 
     }
@@ -34,28 +34,27 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.RoutesView
     @Override
     public void onBindViewHolder(@NonNull RoutesViewHolder holder, int position) {
         Log.d("test","onBindViewHolder from RoutersAdapter");
-        holder.bind(routerList.get(position));
+        holder.bind(routeList.get(position));
     }
 
     @Override
     public int getItemCount() {
         Log.d("test","getItemCount() from RoutersAdapter");
-        return routerList.size();
+        return routeList.size();
     }
 
 
+    private List<Route> routeList = new ArrayList<>();
 
-    private List<Router> routerList = new ArrayList<>();
-
-    public void setItems(Collection<Router> routers) {
-//        clearItems();
+    public void setItems(Collection<Route> routes) {
+        clearItems();
         Log.d("test","setItems from RoutersAdapter");
-        routerList.addAll(routers);
+        routeList.addAll(routes);
         notifyDataSetChanged();
     }
 
     public void clearItems() {
-        routerList.clear();
+        routeList.clear();
         notifyDataSetChanged();
     }
 
@@ -75,28 +74,28 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.RoutesView
         public RoutesViewHolder(View itemView){
             super(itemView);
             Log.d("test","RoutesViewHolder from RoutersAdapter");
-            titleTextView = itemView.findViewById(R.id.text_title_router);
+            titleTextView = itemView.findViewById(R.id.text_title_router_all_routes);
             Log.d("test", "RoutesViewHolder: titleText "+titleTextView );
-            descriptionTextView = itemView.findViewById(R.id.text_description_router);
-            interestTextView = itemView.findViewById(R.id.text_interest_router);
-            typeTextView = itemView.findViewById(R.id.text_type_router);
-            timeTextView = itemView.findViewById(R.id.text_time_router);
-            ratingTextView = itemView.findViewById(R.id.text_rating_router);
-            routerPick = itemView.findViewById(R.id.image_pic_router);
+            descriptionTextView = itemView.findViewById(R.id.text_description_router_all_routes);
+            interestTextView = itemView.findViewById(R.id.text_interest_router_my_routes);
+            typeTextView = itemView.findViewById(R.id.text_type_router_all_routes);
+            timeTextView = itemView.findViewById(R.id.text_time_router_all_routes);
+            ratingTextView = itemView.findViewById(R.id.text_rating_router_all_routes);
+//            routerPick = itemView.findViewById(R.id.image_pic_router_all_routes);
             Log.d("test", "RoutesViewHolder: descText "+descriptionTextView );
         }
 
-        public void bind(Router router) {
+        public void bind(Route route) {
             Log.d("test","bind from RoutersAdapter");
 
-            titleTextView.setText(router.getTitle());
-            descriptionTextView.setText(router.getDescription());
-            interestTextView.setText(router.getInterest());
-            typeTextView.setText(router.getType());
-            timeTextView.setText(router.getTime());
-            ratingTextView.setText(router.getRating());
-            Log.d("test", "bind!: " +router.getPic());
-            routerPick.setImageResource(R.drawable.ic_launcher_background);
+            titleTextView.setText(route.getTitle());
+            descriptionTextView.setText(route.getDescription());
+            interestTextView.setText(route.getInterest());
+            typeTextView.setText(route.getType());
+            timeTextView.setText(route.getTime());
+            ratingTextView.setText(route.getRating());
+            Log.d("test", "bind!: " + route.getPic());
+//            routerPick.setImageResource(R.drawable.ic_launcher_background);
         }
     }
 }

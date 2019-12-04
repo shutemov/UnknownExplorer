@@ -1,33 +1,31 @@
-package com.example.unknownexplorer;
+package com.example.unknownexplorer.activitys;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.unknownexplorer.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.Menu;
-
-public class ActivityMainNavigation extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class ActivityMainNavigation extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private AppBarConfiguration mAppBarConfiguration;
+
+    //данные пользователя
+    int USER_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +34,17 @@ public class ActivityMainNavigation extends AppCompatActivity implements Navigat
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent("ActivityRegistration");
+                Intent intent = new Intent("ActivityCreateRoute");
+
+                //получаем id пользователя
+                int USER_ID = getIntent().getIntExtra("userId", -1);
+                intent.putExtra("userId", USER_ID);
                 startActivity(intent);
+                //всплывающая сноска
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
             }
@@ -62,9 +66,17 @@ public class ActivityMainNavigation extends AppCompatActivity implements Navigat
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        navigationView.setNavigationItemSelectedListener(this);
-    }
+        // Принимаем Id
+        USER_ID = getIntent().getIntExtra("userId", -1);
 
+        // Принимаем Login
+        String USER_LOGIN = getIntent().getStringExtra("userLogin");
+
+        // выводим принятое имя
+        Log.d("intent data", "ID: " + USER_ID + " LOGIN: " + USER_LOGIN);
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,7 +84,6 @@ public class ActivityMainNavigation extends AppCompatActivity implements Navigat
         getMenuInflater().inflate(R.menu.main_navigation, menu);
         return true;
     }
-
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -83,10 +94,10 @@ public class ActivityMainNavigation extends AppCompatActivity implements Navigat
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        Log.d("test","111");
-        switch (menuItem.getItemId()){
-            case R.id.nav_gallery:{
-                Intent intent = new Intent(this,ActivityLogin.class);
+        Log.d("test", "111");
+        switch (menuItem.getItemId()) {
+            case R.id.nav_gallery: {
+                Intent intent = new Intent(this, ActivityLogin.class);
                 startActivity(intent);
                 break;
             }
@@ -96,7 +107,7 @@ public class ActivityMainNavigation extends AppCompatActivity implements Navigat
 
     @Override
     public void onBackPressed() {
-       Log.d("test","on back Pressedddd");
+        Log.d("test", "on back Pressedddd");
     }
 
 }

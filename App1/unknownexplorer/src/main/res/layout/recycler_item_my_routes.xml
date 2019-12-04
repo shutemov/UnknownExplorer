@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image_pic_router_my_routes"
+            tools:srcCompat="@android:drawable/ic_menu_mapmode"
+            android:layout_width="124dp"
+            android:layout_height="97dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_title_router_my_routes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/image_pic_router_my_routes"
+            tools:layout_conversion_absoluteHeight="136dp"
+            tools:layout_conversion_absoluteWidth="0dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <TextView
+            android:id="@+id/text_description_router_my_routes"
+            android:layout_width="0dp"
+            android:layout_height="69dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/image_pic_router_my_routes"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image_pic_router_my_routes"
+            app:layout_constraintTop_toBottomOf="@+id/text_title_router_all_routes"
+            tools:layout_conversion_absoluteHeight="136dp"
+            tools:layout_conversion_absoluteWidth="0dp" />
+
+        <TextView
+            android:id="@+id/text_interest_router_my_routes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Interes"
+            app:layout_constraintStart_toEndOf="@+id/image_pic_router_my_routes"
+            app:layout_constraintTop_toBottomOf="@+id/text_description_router_my_routes" />
+
+        <TextView
+            android:id="@+id/text_type_router_my_routes"
+            style="Lab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="type"
+            app:layout_constraintStart_toEndOf="@+id/text_interest_router_my_routes"
+            app:layout_constraintTop_toTopOf="@+id/text_interest_router_my_routes" />
+
+        <TextView
+            android:id="@+id/text_time_router_my_routes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="time"
+            app:layout_constraintStart_toEndOf="@+id/text_type_router_my_routes"
+            app:layout_constraintTop_toTopOf="@+id/text_type_router_my_routes" />
+
+        <TextView
+            android:id="@+id/text_rating_router_my_routes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="rating"
+            app:layout_constraintEnd_toEndOf="@+id/text_description_router_my_routes"
+            app:layout_constraintStart_toEndOf="@+id/text_time_router_my_routes"
+            app:layout_constraintTop_toTopOf="@+id/text_time_router_my_routes" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_interest_router_my_routes" />
+
+        <ImageView
+            android:id="@+id/image_route_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/text_description_router_all_routes"
+            app:layout_constraintEnd_toEndOf="@+id/text_description_router_my_routes"
+            app:layout_constraintTop_toTopOf="@+id/image_pic_router_my_routes"
+            app:srcCompat="@android:drawable/ic_menu_manage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

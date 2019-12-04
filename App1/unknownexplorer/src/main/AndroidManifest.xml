@@ -9,23 +9,30 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activitys.ActivityCreateRoute">
+            <intent-filter>
+                <action android:name="ActivityCreateRoute" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
-            android:name=".ActivityMainNavigation"
+            android:name=".activitys.ActivityMainNavigation"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="ActivityMainNavigation"></action>
-                <category android:name="android.intent.category.DEFAULT"></category>
-            </intent-filter>
+                <action android:name="ActivityMainNavigation" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
-        <activity android:name=".ActivityRegistration">
+        <activity android:name=".activitys.ActivityRegistration">
             <intent-filter>
                 <action android:name="ActivityRegistration" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityLogin">
+        <activity android:name=".activitys.ActivityLogin">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
