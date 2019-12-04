@@ -6,95 +6,96 @@
     android:layout_height="match_parent"
     tools:context=".activitys.ActivityCreateRoute">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.51">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/label_title_activity_create_route"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Title " />
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edit_text_title_activity_create_route"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName" />
+            <EditText
+                android:id="@+id/edit_text_title_activity_create_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName" />
 
-        <TextView
-            android:id="@+id/label_description_activity_create_route"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Description" />
+            <TextView
+                android:id="@+id/label_title_activity_create_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Title " />
 
-        <EditText
-            android:id="@+id/edit_text_description_activity_create_route"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:gravity="start|top"
-            android:inputType="textMultiLine" />
+            <EditText
+                android:id="@+id/edit_text_description_activity_create_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine" />
 
-        <TextView
-            android:id="@+id/label_interest_activity_create_route"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Interest category" />
+            <TextView
+                android:id="@+id/label_points_router_activity_create_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Points of route" />
 
-        <Spinner
-            android:id="@+id/spinner_interest_activity_create_route"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/interestList"/>
+            <TextView
+                android:id="@+id/label_interest_activity_create_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Interest category" />
 
-        <TextView
-            android:id="@+id/label_type_displacement_activity_create_route"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Type of displacement" />
+            <Spinner
+                android:id="@+id/spinner_interest_activity_create_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/interestList" />
 
-        <Spinner
-            android:id="@+id/spinner_type_displacement_activity_create_route"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/typeList"
-           />
+            <TextView
+                android:id="@+id/label_description_activity_create_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description" />
 
-        <TextView
-            android:id="@+id/label_points_router_activity_create_route"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Points of route" />
+            <Spinner
+                android:id="@+id/spinner_type_displacement_activity_create_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/typeList" />
 
-        <Button
-            android:id="@+id/button_add_point_route"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add route point" />
+            <TextView
+                android:id="@+id/label_type_displacement_activity_create_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Type of displacement" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="226dp"
-            android:isScrollContainer="false">
+            <Button
+                android:id="@+id/button_add_point_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add route point" />
 
-            <TableLayout
-                android:id="@+id/table_layout_points_activity_create_route"
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:isScrollContainer="true" />
-        </ScrollView>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="226dp"
+                android:isScrollContainer="false">
 
-        <Button
-            android:id="@+id/button_create_route"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Create route" />
+                <TableLayout
+                    android:id="@+id/table_layout_points_activity_create_route"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    android:isScrollContainer="true" />
+            </ScrollView>
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/button_create_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Create route" />
+        </LinearLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

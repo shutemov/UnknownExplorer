@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class RoutesAdapter extends RecyclerView.Adapter<RoutesAdapter.RoutesViewHolder> {
+public class allRoutesAdapter extends RecyclerView.Adapter<allRoutesAdapter.RoutesViewHolder> {
 
 
 

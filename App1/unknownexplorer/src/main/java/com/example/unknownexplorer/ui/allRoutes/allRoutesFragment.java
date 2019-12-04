@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.unknownexplorer.R;
-import com.example.unknownexplorer.adapters.allRoutesAdapters.RoutesAdapter;
+import com.example.unknownexplorer.adapters.allRoutesAdapters.allRoutesAdapter;
 import com.example.unknownexplorer.db.DBHelper;
 import com.example.unknownexplorer.models.Route;
 
@@ -25,14 +25,14 @@ public class allRoutesFragment extends Fragment {
 
     //    private HomeViewModel homeViewModel;
     private RecyclerView recyclerView;
-    private RoutesAdapter routesAdapter;
+    private allRoutesAdapter allRoutesAdapter;
 
     DBHelper dbHelper;
 
     private void loadRouters() {
 
         Collection<Route> routes = getRouters();
-        routesAdapter.setItems(routes);
+        allRoutesAdapter.setItems(routes);
     }
 
     @org.jetbrains.annotations.NotNull
@@ -109,8 +109,13 @@ public class allRoutesFragment extends Fragment {
 
         View recycler_item = inflater.inflate(R.layout.recycler_item_all_routes, null);
         recyclerView.setLayoutManager(new LinearLayoutManager(recycler_item.getContext()));
-        routesAdapter = new RoutesAdapter();
-        recyclerView.setAdapter(routesAdapter);
+
+
+
+
+        allRoutesAdapter = new allRoutesAdapter();
+
+        recyclerView.setAdapter(allRoutesAdapter);
 
 
         Log.d("test", "onCreateView4 from home fragment");

@@ -1,6 +1,8 @@
 package com.example.unknownexplorer.ui.myRoutes;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -98,7 +100,7 @@ public class myRoutesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.my_routes, container, false);
+        final View root = inflater.inflate(R.layout.my_routes, container, false);
 
         recyclerView = root.findViewById(R.id.my_routes_recycler_view);
         //получаем recycle item
@@ -110,15 +112,68 @@ public class myRoutesFragment extends Fragment {
         // проверяем можем ли получить id user
         USER_ID = getActivity().getIntent().getExtras().getInt("userId", -1);
         Log.d("FROM MY ROUTES FRAGMENT", "onCreateView: " + USER_ID);
-        MyRoutesAdapter.OnMyRoutesClickListener a = new MyRoutesAdapter.OnMyRoutesClickListener() {
+
+//        MyRoutesAdapter.OnMyRoutesClickListener a = new MyRoutesAdapter.OnMyRoutesClickListener() {
+//
+//            @Override
+//            public void onRouteClick(Route route) {
+//                Log.d("test", "onRouteClick: "+route.getDescription());
+//            }
+//        };
+
+
+        MyRoutesAdapter.OnMyRoutesClickListener listener= new MyRoutesAdapter.OnMyRoutesClickListener() {
             @Override
-            public void onRouteClick(Route _router) {
-                Log.d("test", "onRouteClick: " + _router.getDescription());
+            public void onRouteClick(Route route) {
+                Log.d("TESST", "onRouteClick: "+route.getDescription());
+                Log.d("TESST", "onRouteClick: "+route.getId());
+
+            }
+
+            @Override
+            public void onEditClick(Route route) {
+                Log.d("onEditClicl", "onEditClick: "+ route.getDescription());
+                //Получаем вид с файла dialog_create_point_activity_create_route.xml, который применим для диалогового окна:
+                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                View promptsView = layoutInflater.inflate(R.layout.dialog_edit_my_route, null);
+
+                //Создаем AlertDialog
+                AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(getContext());
+
+                //Настраиваем dialog_create_point_activity_create_route.xml для нашего AlertDialog:
+                mDialogBuilder.setView(promptsView);
+                //Настраиваем сообщение в диалоговом окне:
+                mDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("Create",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        // Добавляем tableRow в TableLayout на основном экране
+
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                //Создаем AlertDialog:
+                AlertDialog alertDialog = mDialogBuilder.create();
+                //и отображаем его:
+                alertDialog.show();
+            }
+
+            @Override
+            public void onDeleteClick(Route route) {
+
             }
         };
 
         // устанавливаем адаптер
-        myRoutesAdapter = new MyRoutesAdapter(a, this);
+        myRoutesAdapter = new MyRoutesAdapter(listener, this);
+
+
         recyclerView.setAdapter(myRoutesAdapter);
 
         dbHelper = new DBHelper(recyclerView.getContext());

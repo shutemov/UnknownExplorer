@@ -3,44 +3,52 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="150dp">
+    android:layout_height="230dp"
+    android:background="#C9CCCCCC"
+    android:padding="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#FDFDFD">
 
-        <ImageView
-            android:id="@+id/image_pic_router_my_routes"
-            tools:srcCompat="@android:drawable/ic_menu_mapmode"
-            android:layout_width="124dp"
-            android:layout_height="97dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="150dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:text="Delete"
+            android:textColor="#C1FF0000"
+            app:layout_constraintBottom_toBottomOf="@+id/editButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editButton" />
 
         <TextView
             android:id="@+id/text_title_router_my_routes"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
             android:text="TextView"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/image_pic_router_my_routes"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:layout_conversion_absoluteHeight="136dp"
-            tools:layout_conversion_absoluteWidth="0dp"
-            tools:layout_editor_absoluteY="16dp" />
+            tools:layout_conversion_absoluteWidth="0dp" />
 
         <TextView
             android:id="@+id/text_description_router_my_routes"
             android:layout_width="0dp"
-            android:layout_height="69dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:text="TextView"
-            app:layout_constraintBottom_toBottomOf="@+id/image_pic_router_my_routes"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/image_pic_router_my_routes"
-            app:layout_constraintTop_toBottomOf="@+id/text_title_router_all_routes"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_title_router_my_routes"
             tools:layout_conversion_absoluteHeight="136dp"
             tools:layout_conversion_absoluteWidth="0dp" />
 
@@ -48,10 +56,11 @@
             android:id="@+id/text_interest_router_my_routes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
             android:text="Interes"
-            app:layout_constraintStart_toEndOf="@+id/image_pic_router_my_routes"
-            app:layout_constraintTop_toBottomOf="@+id/text_description_router_my_routes" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <TextView
             android:id="@+id/text_type_router_my_routes"
@@ -77,6 +86,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
             android:text="rating"
             app:layout_constraintEnd_toEndOf="@+id/text_description_router_my_routes"
             app:layout_constraintStart_toEndOf="@+id/text_time_router_my_routes"
@@ -86,22 +96,22 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="15dp"
             android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_interest_router_my_routes" />
+            app:layout_constraintTop_toBottomOf="@+id/text_description_router_my_routes" />
 
-        <ImageView
-            android:id="@+id/image_route_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/text_description_router_all_routes"
-            app:layout_constraintEnd_toEndOf="@+id/text_description_router_my_routes"
-            app:layout_constraintTop_toTopOf="@+id/image_pic_router_my_routes"
-            app:srcCompat="@android:drawable/ic_menu_manage" />
+        <Button
+            android:id="@+id/editButton"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:text="Edit"
+            android:textColor="#1837A5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_description_router_my_routes" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
