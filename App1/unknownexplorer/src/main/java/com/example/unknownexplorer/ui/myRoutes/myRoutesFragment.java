@@ -1,6 +1,7 @@
 package com.example.unknownexplorer.ui.myRoutes;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -113,39 +116,113 @@ public class myRoutesFragment extends Fragment {
         USER_ID = getActivity().getIntent().getExtras().getInt("userId", -1);
         Log.d("FROM MY ROUTES FRAGMENT", "onCreateView: " + USER_ID);
 
-//        MyRoutesAdapter.OnMyRoutesClickListener a = new MyRoutesAdapter.OnMyRoutesClickListener() {
 //
-//            @Override
-//            public void onRouteClick(Route route) {
-//                Log.d("test", "onRouteClick: "+route.getDescription());
-//            }
-//        };
 
 
-        MyRoutesAdapter.OnMyRoutesClickListener listener= new MyRoutesAdapter.OnMyRoutesClickListener() {
+        MyRoutesAdapter.OnMyRoutesClickListener myRoutesListener = new MyRoutesAdapter.OnMyRoutesClickListener() {
             @Override
             public void onRouteClick(Route route) {
-                Log.d("TESST", "onRouteClick: "+route.getDescription());
-                Log.d("TESST", "onRouteClick: "+route.getId());
-
+                Log.d("TESST", "onRouteClick: " + route.getDescription());
+                Log.d("TESST", "onRouteClick: " + route.getId());
             }
 
             @Override
-            public void onEditClick(Route route) {
-                Log.d("onEditClicl", "onEditClick: "+ route.getDescription());
+            public void onEditClick(final Route route) {
+                Log.d("onEditClicl", "onEditClick: " + route.getDescription());
                 //Получаем вид с файла dialog_create_point_activity_create_route.xml, который применим для диалогового окна:
                 LayoutInflater layoutInflater = LayoutInflater.from(getContext());
                 View promptsView = layoutInflater.inflate(R.layout.dialog_edit_my_route, null);
 
+                //элементы диалогового окна.
+                final Spinner interestSpinner = promptsView.findViewById(R.id.input_spinner_interest);
+                final Spinner typeSpinner = promptsView.findViewById(R.id.input_spinner_type);
+                final EditText inputNewTitle = promptsView.findViewById(R.id.input_title);
+                final EditText inputNewDescription = promptsView.findViewById(R.id.input_description);
+
+                //TODO: устанавливаем значения из маршрута в элементы диалогового окна
+                inputNewTitle.setText(route.getTitle());
+                inputNewDescription.setText(route.getDescription());
+
                 //Создаем AlertDialog
-                AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(getContext());
+                final AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(getContext());
 
                 //Настраиваем dialog_create_point_activity_create_route.xml для нашего AlertDialog:
                 mDialogBuilder.setView(promptsView);
                 //Настраиваем сообщение в диалоговом окне:
                 mDialogBuilder
                         .setCancelable(false)
-                        .setPositiveButton("Create",
+                        .setPositiveButton("Edit",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        //получаем значения полей из диалогового окна.
+                                        long routeId = route.getId();
+                                        String newTitle = inputNewTitle.getText().toString();
+                                        String newDescription = inputNewDescription.getText().toString();
+                                        String inputNewInterest = interestSpinner.getSelectedItem().toString();
+                                        String inputNewTypeDisplacement = typeSpinner.getSelectedItem().toString();
+
+                                        // создаем объект для данных
+                                        ContentValues newRouteDataContent = new ContentValues();
+                                        // подключаемся к БД
+                                        SQLiteDatabase db = dbHelper.getWritableDatabase();
+                                        //получаем данные из базы данных
+
+                                        newRouteDataContent.put("title", newTitle);
+                                        newRouteDataContent.put("description", newDescription);
+                                        newRouteDataContent.put("interest", inputNewInterest);
+                                        newRouteDataContent.put("type", inputNewTypeDisplacement);
+
+                                        // запрос на обновление route.
+                                        int dataRoutes = db.update("routes", newRouteDataContent, "id = ?", new String[]{String.valueOf(routeId)});
+
+
+//                                        int idColIndex = dataRoutes.getColumnIndex("id");
+//                                        int titleColIndex = dataRoutes.getColumnIndex("title");
+//                                        int descriptionColIndex = dataRoutes.getColumnIndex("description");
+//                                        int interestColIndex = dataRoutes.getColumnIndex("interest");
+//                                        int typeColIndex = dataRoutes.getColumnIndex("type");
+//                                        if (dataRoutes.moveToFirst()) {
+//                                            do {
+//                                                // получаем значения по номерам столбцов и пишем все в лог
+//                                                Log.d("out_route_TESST",
+//                                                        "ID = " + dataRoutes.getInt(idColIndex) +
+//                                                                ", title = " + dataRoutes.getString(titleColIndex)
+//                                                );
+//
+//                                            } while (dataRoutes.moveToNext());
+//                                        } else
+//                                            dataRoutes.close();
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                //Создаем AlertDialog:
+                AlertDialog alertDialog = mDialogBuilder.create();
+                //и отображаем его:
+                alertDialog.show();
+            }
+
+            @Override
+            public void onDeleteClick(Route route) {
+                Log.d("onEditClicl", "onEditClick: " + route.getDescription());
+                //Получаем вид с файла dialog_create_point_activity_create_route.xml, который применим для диалогового окна:
+                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                View dialogEditMyRouteView = layoutInflater.inflate(R.layout.dialog_edit_my_route, null);
+
+                //Создаем AlertDialog
+                AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(getContext());
+
+                //Настраиваем dialog_create_point_activity_create_route.xml для нашего AlertDialog:
+                mDialogBuilder.setView(dialogEditMyRouteView);
+                //Настраиваем сообщение в диалоговом окне:
+                mDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("Delete",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         // Добавляем tableRow в TableLayout на основном экране
@@ -163,15 +240,10 @@ public class myRoutesFragment extends Fragment {
                 //и отображаем его:
                 alertDialog.show();
             }
-
-            @Override
-            public void onDeleteClick(Route route) {
-
-            }
         };
 
         // устанавливаем адаптер
-        myRoutesAdapter = new MyRoutesAdapter(listener, this);
+        myRoutesAdapter = new MyRoutesAdapter(myRoutesListener, this);
 
 
         recyclerView.setAdapter(myRoutesAdapter);
