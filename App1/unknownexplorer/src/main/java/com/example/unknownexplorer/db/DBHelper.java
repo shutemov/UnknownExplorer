@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "title text,"
                 + "interest text,"
                 + "type text,"
-                + "description text" + ");");
+                + "FOREIGN KEY(userId) REFERENCES users(id)" + ");");
 
         db.execSQL("create table points ("
                 + "routeId integer,"

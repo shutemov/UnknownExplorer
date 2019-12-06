@@ -1,4 +1,4 @@
-package com.example.unknownexplorer.adapters.allRoutesAdapters;
+package com.example.unknownexplorer.adapters;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class allRoutesAdapter extends RecyclerView.Adapter<allRoutesAdapter.RoutesViewHolder> {
+public class AllRoutesAdapter extends RecyclerView.Adapter<AllRoutesAdapter.RoutesViewHolder> {
 
 
 
@@ -73,16 +73,16 @@ public class allRoutesAdapter extends RecyclerView.Adapter<allRoutesAdapter.Rout
 
         public RoutesViewHolder(View itemView){
             super(itemView);
-            Log.d("test","RoutesViewHolder from RoutersAdapter");
+            Log.d("test","PointsViewHolder from RoutersAdapter");
             titleTextView = itemView.findViewById(R.id.text_title_router_all_routes);
-            Log.d("test", "RoutesViewHolder: titleText "+titleTextView );
+            Log.d("test", "PointsViewHolder: titleText "+titleTextView );
             descriptionTextView = itemView.findViewById(R.id.text_description_router_all_routes);
             interestTextView = itemView.findViewById(R.id.text_interest_router_my_routes);
             typeTextView = itemView.findViewById(R.id.text_type_router_all_routes);
             timeTextView = itemView.findViewById(R.id.text_time_router_all_routes);
             ratingTextView = itemView.findViewById(R.id.text_rating_router_all_routes);
 //            routerPick = itemView.findViewById(R.id.image_pic_router_all_routes);
-            Log.d("test", "RoutesViewHolder: descText "+descriptionTextView );
+            Log.d("test", "PointsViewHolder: descText "+descriptionTextView );
         }
 
         public void bind(Route route) {

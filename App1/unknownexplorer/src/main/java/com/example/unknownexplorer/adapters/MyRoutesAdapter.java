@@ -1,4 +1,4 @@
-package com.example.unknownexplorer.adapters.myRoutesAdapter;
+package com.example.unknownexplorer.adapters;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.unknownexplorer.R;
 import com.example.unknownexplorer.models.Route;
-import com.example.unknownexplorer.ui.myRoutes.myRoutesFragment;
+import com.example.unknownexplorer.ui.myRoutes.MyRoutesFragment;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +23,7 @@ public class MyRoutesAdapter extends RecyclerView.Adapter<MyRoutesAdapter.MyRout
 
     private static List<Route> routeList = new ArrayList<>();
     private static OnMyRoutesClickListener onMyRoutesClickListener;
-    private myRoutesFragment context;
+    private MyRoutesFragment context;
 
 
     public interface OnMyRoutesClickListener {
@@ -33,7 +33,7 @@ public class MyRoutesAdapter extends RecyclerView.Adapter<MyRoutesAdapter.MyRout
     }
 
 
-    public MyRoutesAdapter(OnMyRoutesClickListener _onMyROutesClickListener, myRoutesFragment _contex) {
+    public MyRoutesAdapter(OnMyRoutesClickListener _onMyROutesClickListener, MyRoutesFragment _contex) {
         this.onMyRoutesClickListener = _onMyROutesClickListener;
         this.context = _contex;
     }
@@ -95,7 +95,7 @@ public class MyRoutesAdapter extends RecyclerView.Adapter<MyRoutesAdapter.MyRout
             ratingTextView = itemView.findViewById(R.id.text_rating_router_my_routes);
 
 
-            //по клику на элемент отправляем в myRoutesFragment наш Route
+            //по клику на элемент отправляем в MyRoutesFragment наш Route
             itemView.findViewById(R.id.deleteButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

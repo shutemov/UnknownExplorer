@@ -15,6 +15,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/label_title_activity_create_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Title " />
+
             <EditText
                 android:id="@+id/edit_text_title_activity_create_route"
                 android:layout_width="match_parent"
@@ -23,10 +29,10 @@
                 android:inputType="textPersonName" />
 
             <TextView
-                android:id="@+id/label_title_activity_create_route"
+                android:id="@+id/label_description_activity_create_route"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Title " />
+                android:text="Description" />
 
             <EditText
                 android:id="@+id/edit_text_description_activity_create_route"
@@ -35,12 +41,6 @@
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine" />
-
-            <TextView
-                android:id="@+id/label_points_router_activity_create_route"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Points of route" />
 
             <TextView
                 android:id="@+id/label_interest_activity_create_route"
@@ -55,10 +55,10 @@
                 android:entries="@array/interestList" />
 
             <TextView
-                android:id="@+id/label_description_activity_create_route"
+                android:id="@+id/label_type_displacement_activity_create_route"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Description" />
+                android:text="Type of displacement" />
 
             <Spinner
                 android:id="@+id/spinner_type_displacement_activity_create_route"
@@ -67,10 +67,10 @@
                 android:entries="@array/typeList" />
 
             <TextView
-                android:id="@+id/label_type_displacement_activity_create_route"
+                android:id="@+id/label_points_router_activity_create_route"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Type of displacement" />
+                android:text="Points of route" />
 
             <Button
                 android:id="@+id/button_add_point_route"

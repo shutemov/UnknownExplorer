@@ -14,18 +14,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.unknownexplorer.R;
-import com.example.unknownexplorer.adapters.allRoutesAdapters.allRoutesAdapter;
+import com.example.unknownexplorer.adapters.AllRoutesAdapter;
 import com.example.unknownexplorer.db.DBHelper;
 import com.example.unknownexplorer.models.Route;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class allRoutesFragment extends Fragment {
+public class AllRoutesFragment extends Fragment {
 
     //    private HomeViewModel homeViewModel;
-    private RecyclerView recyclerView;
-    private allRoutesAdapter allRoutesAdapter;
+    private RecyclerView recyclerViewAllRoutes;
+    private AllRoutesAdapter allRoutesAdapter;
 
     DBHelper dbHelper;
 
@@ -94,39 +94,15 @@ public class allRoutesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        Log.d("test", "onCreateView1 from home fragment");
-        Log.d("test", "onCreateView: " + R.layout.all_routes);
-
         View root = inflater.inflate(R.layout.all_routes, container, false);
-        Log.d("test", "onCreateView2 from home fragment");
-        Log.d("test", "VIEW ID?: " + root);
-        recyclerView = root.findViewById(R.id.routes_recycler_view);
-
-
-        Log.d("test", "onCreateView: " + recyclerView);
-        Log.d("test", "onCreateView3 from home fragment");
-
-
-        View recycler_item = inflater.inflate(R.layout.recycler_item_all_routes, null);
-        recyclerView.setLayoutManager(new LinearLayoutManager(recycler_item.getContext()));
-
-
-
-
-        allRoutesAdapter = new allRoutesAdapter();
-
-        recyclerView.setAdapter(allRoutesAdapter);
-
-
-        Log.d("test", "onCreateView4 from home fragment");
-
+        recyclerViewAllRoutes = root.findViewById(R.id.routes_recycler_view);
+        View recycler_item = inflater.inflate(R.layout.recycler_item_points_of_route, null);
+        recyclerViewAllRoutes.setLayoutManager(new LinearLayoutManager(recycler_item.getContext()));
+        allRoutesAdapter = new AllRoutesAdapter();
+        recyclerViewAllRoutes.setAdapter(allRoutesAdapter);
         // создаем объект для создания и управления версиями БД
-        dbHelper = new DBHelper(recyclerView.getContext());
-
-
+        dbHelper = new DBHelper(recyclerViewAllRoutes.getContext());
         loadRouters();
-
-
         return root;
     }
 
