@@ -1,4 +1,4 @@
-package com.example.unknownexplorer.ui.myRoutes;
+package com.example.unknownexplorer.fragments;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -40,14 +41,7 @@ public class MyRoutesFragment extends Fragment {
     private int USER_ID;
     DBHelper dbHelper;
 
-    private void loadPoints(long routeId){
-        Log.d("test load", "loadPoints  from my_routes fragment");
-        Collection<Point> points = getPoints(routeId);
-        for (int i = 0; i< points.size(); i++){
-            Log.d("point", "loadPoints: " + points);
-        }
-        pointsOfRouteAdapter.setItems(points);
-    };
+
     private Collection<Point> getPoints(long routeId) {
 
         Log.d("test", "getPoints  from my_routes fragment");
@@ -66,8 +60,6 @@ public class MyRoutesFragment extends Fragment {
             // определяем номера столбцов по имени в выборке
             int idColIndex = dataRoutes.getColumnIndex("id");
 //            int titleColIndex = dataRoutes.getColumnIndex("title");
-
-
             do {
                 // получаем значения по номерам столбцов и пишем все в лог
                 Log.d("out_route",
@@ -89,16 +81,8 @@ public class MyRoutesFragment extends Fragment {
         dataRoutes.close();
 
         return points;
-
     }
 
-    private void loadRouters() {
-        Log.d("test", "loadRouters  from my_routes fragment");
-        Collection<Route> routes = getRoutes();
-        myRoutesAdapter.setItems(routes);
-    }
-
-    @org.jetbrains.annotations.NotNull
     private Collection<Route> getRoutes() {
         Log.d("test", "getRoutes  from my_routes fragment");
 
@@ -147,12 +131,23 @@ public class MyRoutesFragment extends Fragment {
         dataRoutes.close();
 
         return routes;
+    }
 
-//        return Arrays.asList(
-//                new Route(1,"чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5"),
-//                new Route(2,"чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5"),
-//                new Route(3,"чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5")
-//        );
+    private void loadPoints(long routeId) {
+        Log.d("test load", "loadPoints  from my_routes fragment");
+        Collection<Point> points = getPoints(routeId);
+        for (int i = 0; i < points.size(); i++) {
+            Log.d("point", "loadPoints: " + points);
+        }
+        pointsOfRouteAdapter.setItems(points);
+    }
+
+    ;
+
+    private void loadRouters() {
+        Log.d("test", "loadRouters  from my_routes fragment");
+        Collection<Route> routes = getRoutes();
+        myRoutesAdapter.setItems(routes);
     }
 
     public View onCreateView(@NonNull final LayoutInflater inflater,
@@ -176,8 +171,7 @@ public class MyRoutesFragment extends Fragment {
 
             @Override
             public void onRouteClick(Route route) {
-                Log.d("TESST", "onRouteClick: " + route.getDescription());
-                Log.d("TESST", "onRouteClick: " + route.getId());
+
             }
 
             @Override
@@ -190,26 +184,31 @@ public class MyRoutesFragment extends Fragment {
                 LayoutInflater layoutInflater = LayoutInflater.from(getContext());
 
                 //Получаем вид диалогового окна
-                View editRouteDialogWindow = layoutInflater.inflate(R.layout.dialog_edit_my_route, null);
+                final View editRouteDialogWindow = layoutInflater.inflate(R.layout.dialog_edit_my_route, null);
 
 
                 //объявляем ресайкл вью точек маршрута
-                RecyclerView recyclerViewPoints;
+                final RecyclerView recyclerViewPoints;
 
+                //получаем ресайкл вью из вида диалогового окна.
                 recyclerViewPoints = editRouteDialogWindow.findViewById(R.id.recycler_view_edit_route);
 
                 View pointRecyclerItem = inflater.inflate(R.layout.recycler_item_points_of_route, null);
 
                 recyclerViewPoints.setLayoutManager(new LinearLayoutManager(pointRecyclerItem.getContext()));
 
-                PointsOfRouteAdapter.OnPointClickListener  onPointClickListener = new PointsOfRouteAdapter.OnPointClickListener() {
+                PointsOfRouteAdapter.OnPointClickListener onPointClickListener = new PointsOfRouteAdapter.OnPointClickListener() {
                     @Override
-                    public void pointClick() {
-                        Log.d("click", "pointClick: !!!");
+                    public void onDeletePoint(Point point) {
+                        SQLiteDatabase db = dbHelper.getWritableDatabase();
+                        //получаем данные из базы данных
+                        db.delete("points", "id = " + point.getId(), null);
+                        pointsOfRouteAdapter.notifyDataSetChanged();
+                        loadPoints(point.getId());
                     }
                 };
 
-                pointsOfRouteAdapter = new PointsOfRouteAdapter(onPointClickListener,getContext());
+                pointsOfRouteAdapter = new PointsOfRouteAdapter(onPointClickListener, getContext());
 
                 recyclerViewPoints.setAdapter(pointsOfRouteAdapter);
 
@@ -223,9 +222,37 @@ public class MyRoutesFragment extends Fragment {
                 final EditText inputNewDescription = editRouteDialogWindow.findViewById(R.id.input_description);
 
                 //TODO: устанавливаем значения из маршрута в элементы диалогового окна (решить проблему вставки значения в спиннеры)
+                //TODO: ПОСЛЕДНИЙ ЭЛЕМЕНТ НЕ ДОКРУЧИВАЕТСЯ.
+
                 inputNewTitle.setText(route.getTitle());
                 inputNewDescription.setText(route.getDescription());
+
                 //END TODO
+
+                //todo
+                Button buttonAddPoint = editRouteDialogWindow.findViewById(R.id.add_point_button_edit_route);
+                final EditText inputPointName = editRouteDialogWindow.findViewById(R.id.input_point_name);
+                final EditText inputPointXCoord = editRouteDialogWindow.findViewById(R.id.input_point_x_coord);
+                final EditText inputPointYCoord = editRouteDialogWindow.findViewById(R.id.input_point_y_coord);
+
+                Log.d("add point button1", "onClick: " + buttonAddPoint);
+                buttonAddPoint.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        inputPointName.setText("");
+                        inputPointXCoord.setText("");
+                        inputPointYCoord.setText("");
+                        SQLiteDatabase db = dbHelper.getWritableDatabase();
+                        ContentValues newPointData = new ContentValues();
+                        newPointData.put("routeId", route.getId());
+                        db.insert("points", "", newPointData);
+                        loadPoints(route.getId());
+                        Log.d("add point button", "onClick: " + v);
+                    }
+                });
+
+
+                //end todo
 
                 //Создаем AlertDialog
                 final AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(getContext());
@@ -238,8 +265,11 @@ public class MyRoutesFragment extends Fragment {
                         .setPositiveButton("Edit",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
+
+                                        final long routeId = route.getId();
+
                                         //получаем значения полей из диалогового окна.
-                                        long routeId = route.getId();
+
                                         String newTitle = inputNewTitle.getText().toString();
                                         String newDescription = inputNewDescription.getText().toString();
                                         String inputNewInterest = interestSpinner.getSelectedItem().toString();
@@ -259,7 +289,10 @@ public class MyRoutesFragment extends Fragment {
                                         // запрос на обновление route.
                                         int dataRoutes = db.update("routes", newRouteDataContent, "id = ?", new String[]{String.valueOf(routeId)});
 
-//__________________________________________КОД ДЛЯ ПРОВЕРКИ ПРИШЕДШИХ ИЗ БД ДАННЫХ________________________________________________________
+                                        //TODO: обновляем данные в ресайкл вью мои маршруты
+                                        loadRouters();
+
+                                        //__________________________________________КОД ДЛЯ ПРОВЕРКИ ПРИШЕДШИХ ИЗ БД ДАННЫХ________________________________________________________
 //                                        int idColIndex = dataRoutes.getColumnIndex("id");
 //                                        int titleColIndex = dataRoutes.getColumnIndex("title");
 //                                        int descriptionColIndex = dataRoutes.getColumnIndex("description");
@@ -276,7 +309,8 @@ public class MyRoutesFragment extends Fragment {
 //                                            } while (dataRoutes.moveToNext());
 //                                        } else
 //                                            dataRoutes.close();
-//______________________________________________________________________________________________________________________________________________________________________________________________________________________________
+//______________________________________________________________________________________________________________________________________________________________________________________________________________________________recyclerView.getAdapter().notifyDataSetChanged();
+
                                     }
                                 })
                         .setNegativeButton("Cancel",
@@ -290,7 +324,6 @@ public class MyRoutesFragment extends Fragment {
                 //и отображаем его:
                 alertDialog.show();
             }
-
 
             @Override
             public void onDeleteClick(final Route route) {
@@ -312,7 +345,8 @@ public class MyRoutesFragment extends Fragment {
                                         SQLiteDatabase db = dbHelper.getWritableDatabase();
                                         //получаем данные из базы данных
                                         int delCount = db.delete("routes", "id = " + route.getId(), null);
-                                        Log.d("delete", "onClick: route was deleted "+delCount);
+                                        loadRouters();
+                                        Log.d("delete", "onClick: route was deleted " + delCount);
                                     }
                                 })
                         .setNegativeButton("Cancel",
@@ -326,8 +360,6 @@ public class MyRoutesFragment extends Fragment {
                 //и отображаем его:
                 alertDialog.show();
             }
-
-
         };
 
         // устанавливаем адаптер
@@ -342,7 +374,6 @@ public class MyRoutesFragment extends Fragment {
         //возвращаем отображение из фрагмента.
         return root;
     }
-
 
 
 }

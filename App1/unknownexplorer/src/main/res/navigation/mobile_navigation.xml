@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.unknownexplorer.ui.allRoutes.AllRoutesFragment"
+        android:name="com.example.unknownexplorer.fragments.AllRoutesFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/all_routes" />
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.example.unknownexplorer.ui.myRoutes.MyRoutesFragment"
+        android:name="com.example.unknownexplorer.fragments.MyRoutesFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/my_routes" />
 

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.unknownexplorer.R;
 import com.example.unknownexplorer.models.Route;
-import com.example.unknownexplorer.ui.myRoutes.MyRoutesFragment;
+import com.example.unknownexplorer.fragments.MyRoutesFragment;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -96,16 +96,16 @@ public class MyRoutesAdapter extends RecyclerView.Adapter<MyRoutesAdapter.MyRout
 
 
             //по клику на элемент отправляем в MyRoutesFragment наш Route
-            itemView.findViewById(R.id.deleteButton).setOnClickListener(new View.OnClickListener() {
+            itemView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Route route = routeList.get(getLayoutPosition());
-//                    onMyRoutesClickListener.onRouteClick(route);
+//                    onPointClickListener.onRouteClick(route);
                     onMyRoutesClickListener.onDeleteClick(route);
                 }
             });
 
-            itemView.findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
+            itemView.findViewById(R.id.edit_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Route route = routeList.get(getLayoutPosition());

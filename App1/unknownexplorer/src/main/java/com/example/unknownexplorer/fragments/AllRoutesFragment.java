@@ -1,4 +1,4 @@
-package com.example.unknownexplorer.ui.allRoutes;
+package com.example.unknownexplorer.fragments;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -85,10 +85,6 @@ public class AllRoutesFragment extends Fragment {
         data.close();
 
         return routes;
-//        return Arrays.asList(
-//                new Route("чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5"),
-//                new Route("чил для хикк", "lorem impusmdssdlkf;ldsk fldsk;lfksd;lorem impusmdssdlkf;ldsk fldsk;lfksd;lorem impusmdssdlkf;ldsk fldsk;lfksd;lorem impusmdssdlkf;ldsk fldsk;lfksd;impusmdssdlkf;ldsk fldsk;lfksd;lorem impusmdssdlkf;ldsk fldsk;lfksd;lorem impusmdssdlkf;ldsk fldsk;lfksd;lorem impusmdssdlkf;ldsk fldsk;lfksd;","photo","walk","13:03","3/5"),
-//        );
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

@@ -74,8 +74,6 @@ public class ActivityMainNavigation extends AppCompatActivity implements Navigat
 
         // выводим принятое имя
         Log.d("intent data", "ID: " + USER_ID + " LOGIN: " + USER_LOGIN);
-
-
     }
 
     @Override

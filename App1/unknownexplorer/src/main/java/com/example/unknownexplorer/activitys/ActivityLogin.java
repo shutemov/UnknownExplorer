@@ -35,6 +35,9 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
         inputLogin = findViewById(R.id.inputLogin);
         inputPassword = findViewById(R.id.inputPasswordLoginScreen);
 
+        inputLogin.setText("j");
+        inputPassword.setText("1");
+
         btnLogin.setOnClickListener(this);
         txRegistration.setOnClickListener(this);
 
@@ -63,7 +66,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                 Log.d("login", "onClick: " + data.getCount() + " " + data.moveToFirst());
 
 
-                // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$DELETE THIS$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+                // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ DELETE THIS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
                 Cursor allUsers = db.query("users", null, null, null, null, null, null);
                 Log.d("login", "onClick: " + data.getCount() + " " + data.moveToFirst());
@@ -88,7 +91,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                 } else
                     Log.d("all users in system", "0 rows");
                 allUsers.close();
-// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$DELETE THIS$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ DELETE THIS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
                 if (data.moveToFirst() && (data.getCount() == 1)) {
                     intent = new Intent("ActivityMainNavigation");

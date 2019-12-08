@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.unknownexplorer.R;
 import com.example.unknownexplorer.models.Point;
-import com.example.unknownexplorer.ui.myRoutes.MyRoutesFragment;
+import com.example.unknownexplorer.fragments.MyRoutesFragment;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,15 +24,15 @@ public class PointsOfRouteAdapter extends RecyclerView.Adapter<PointsOfRouteAdap
 
     private List<Point> pointList = new ArrayList<>();
 
-    OnPointClickListener onMyRoutesClickListener;
+    OnPointClickListener onPointClickListener;
     MyRoutesFragment context;
 
     public interface OnPointClickListener{
-        void pointClick();
+        void onDeletePoint(Point point);
     }
 
     public PointsOfRouteAdapter(OnPointClickListener onPointClickListener, Context _contex) {
-        this.onMyRoutesClickListener = onPointClickListener;
+        this.onPointClickListener = onPointClickListener;
         this.context = context;
     }
 
@@ -87,6 +87,15 @@ public class PointsOfRouteAdapter extends RecyclerView.Adapter<PointsOfRouteAdap
             xCoord = itemView.findViewById(R.id.x_coord_point);
             yCoord = itemView.findViewById(R.id.y_coord_point);
             deleteButton = itemView.findViewById(R.id.delete_button_point);
+
+            itemView.findViewById(R.id.delete_button_point).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Point point = pointList.get(getLayoutPosition());
+                    onPointClickListener.onDeletePoint(point);
+                }
+            });
+
         }
 
         public void bind(Point point) {

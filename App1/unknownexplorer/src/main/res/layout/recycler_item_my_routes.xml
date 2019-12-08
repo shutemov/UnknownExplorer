@@ -13,15 +13,15 @@
         android:background="#FDFDFD">
 
         <Button
-            android:id="@+id/deleteButton"
+            android:id="@+id/delete_button"
             android:layout_width="150dp"
             android:layout_height="0dp"
             android:layout_marginEnd="8dp"
             android:text="Delete"
             android:textColor="#C1FF0000"
-            app:layout_constraintBottom_toBottomOf="@+id/editButton"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editButton" />
+            app:layout_constraintTop_toTopOf="@+id/edit_button" />
 
         <TextView
             android:id="@+id/text_title_router_my_routes"
@@ -103,7 +103,7 @@
             app:layout_constraintTop_toBottomOf="@+id/text_description_router_my_routes" />
 
         <Button
-            android:id="@+id/editButton"
+            android:id="@+id/edit_button"
             android:layout_width="150dp"
             android:layout_height="40dp"
             android:layout_marginStart="8dp"

@@ -1,16 +1,17 @@
 package com.example.unknownexplorer.activitys;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -63,17 +64,9 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
         buttonCreateRoute.setOnClickListener(this);
 
         //получаем данные из ActivityMainNavigation
-        USER_ID = getIntent().getIntExtra("userId",-1);
-        Log.d("ActivityCreateRoute", "onCreate: "+USER_ID);
+        USER_ID = getIntent().getIntExtra("userId", -1);
+        Log.d("ActivityCreateRoute", "onCreate: " + USER_ID);
 
-        tablePoints.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                Log.d("ClickTableRow", "onClick: !!!");
-
-                tablePoints.removeViewInLayout((ViewGroup)v.getParent());
-            }
-        });
 
         // создаем объект для создания и управления версиями БД
         dbHelper = new DBHelper(this);
@@ -102,6 +95,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                 .setCancelable(false)
                 .setPositiveButton("Create",
                         new DialogInterface.OnClickListener() {
+                            @SuppressLint("ResourceType")
                             public void onClick(DialogInterface dialog, int id) {
                                 // Добавляем tableRow в TableLayout на основном экране
                                 TableRow tableRow = new TableRow(context);
@@ -129,15 +123,26 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                                 X.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                                 Y.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                                 deletePoint.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-
+                                deletePoint.setId(1);
 
                                 //добавляем элементы в tableRow
                                 tableRow.addView(title);
                                 tableRow.addView(X);
                                 tableRow.addView(Y);
                                 tableRow.addView(deletePoint);
-
                                 tablePoints.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+
+                                //удаление точки маршрута из таблицы
+                                deletePoint.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        //получаем к
+                                        final View colTableRow = v.findViewById(1);
+                                        tablePoints.removeView((View) colTableRow.getParent());
+                                    }
+                                });
+
+
 
                             }
                         })
@@ -154,9 +159,24 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
 
         // подключаемся к БД
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+//        //TODO
+//        View tableRow = tablePoints.getChildAt(0);
+//
+//        @SuppressLint("ResourceType") final View colTableRow = tableRow.findViewById(1);
+//
+//        colTableRow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                switch (v.getId()){
+//                    case 1:
+//                        tablePoints.removeView((View) colTableRow.getParent());
+//                }
+//            }
+//        });
 
 
         switch (v.getId()) {
+
             case R.id.button_create_route:
                 Log.d("insertRoute", "--- Insert in mytable: ---");
                 String routeTitle = editTextTitle.getText().toString();
@@ -171,7 +191,6 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                 routeContent.put("description", routeDescription);
                 routeContent.put("interest", interest);
                 routeContent.put("type", typeDisplacement);
-
 
 
                 // вставляем запись и получаем ее ID
@@ -202,22 +221,24 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                                 "ID = " + c.getInt(idColIndex) +
                                         "userId = " + c.getInt(idUserColIndex) +
                                         ", name = " + c.getString(titleColIndex)
-                                       );
+                        );
                         // переход на следующую строку
                         // а если следующей нет (текущая - последняя), то false - выходим из цикла
                     } while (c.moveToNext());
                 } else
                     Log.d("out_route", "0 rows");
                 c.close();
-
-
+//                Todo: при клике на кнопку "my routes" в навигации, возвращает на создание маршрута.
+                Intent intent = new Intent("ActivityMainNavigation");
+                startActivity(intent);
+                super.onDestroy();
                 break;
             case R.id.button_add_point_route:
-
                 //Создаем AlertDialog:
                 AlertDialog alertDialog = mDialogBuilder.create();
                 //и отображаем его:
                 alertDialog.show();
+                break;
         }
 
     }
