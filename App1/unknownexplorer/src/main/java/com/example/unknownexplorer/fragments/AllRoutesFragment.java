@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -28,6 +29,14 @@ public class AllRoutesFragment extends Fragment {
     //    private HomeViewModel homeViewModel;
     private RecyclerView recyclerViewAllRoutes;
     private AllRoutesAdapter allRoutesAdapter;
+
+    //элементы модального окна
+    TextView routeAutor;
+    TextView routeTitle;
+    TextView routeDescription;
+    TextView routeInterest;
+    TextView routeTypeDisplacement;
+    RecyclerView recyclerViewAllPointsOfRoute;
 
     DBHelper dbHelper;
 
@@ -94,7 +103,7 @@ public class AllRoutesFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.all_routes, container, false);
         recyclerViewAllRoutes = root.findViewById(R.id.routes_recycler_view);
-        View recycler_item = inflater.inflate(R.layout.recycler_item_points_of_route, null);
+        View recycler_item = inflater.inflate(R.layout.recycler_item_points_of_my_route, null);
         recyclerViewAllRoutes.setLayoutManager(new LinearLayoutManager(recycler_item.getContext()));
 
         AllRoutesAdapter.OnAllRoutesClickListener allRoutesListener = new AllRoutesAdapter.OnAllRoutesClickListener() {
@@ -102,15 +111,71 @@ public class AllRoutesFragment extends Fragment {
             public void onRouteClick(Route route) {
                 Log.d("click", "onRouteClick: !!! " + route.getId());
                 LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-
                 //Получаем вид диалогового окна
-                final View showInfoAboutRoute = layoutInflater.inflate(R.layout.info_about_route, null);
+                final View infoAboutRoute = layoutInflater.inflate(R.layout.info_about_route, null);
+
+                //получаем элементы диалогвого окна.
+                int authorOfRouteId = -1;
+                routeAutor = infoAboutRoute.findViewById(R.id.info_route_autor);
+                routeTitle = infoAboutRoute.findViewById(R.id.info_route_title);
+                routeDescription = infoAboutRoute.findViewById(R.id.info_route_description);
+                routeInterest = infoAboutRoute.findViewById(R.id.info_route_interest);
+                routeTypeDisplacement = infoAboutRoute.findViewById(R.id.info_route_type_of_displacement);
+
+                // подключаемся к БД
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                //получаем данные из базы данных
+                Log.d("click", "onRouteClickkkk: "+ route.getId());
+                String selection = "id = ?";
+                String[] selectionArgs = new String[]{(String.valueOf(route.getId()))};
+                // первый запрос на получение данных о маршруте
+                Cursor routeData = db.query("routes", null, selection, selectionArgs, null, null, null);
+                if (routeData.moveToFirst()) {
+                    int authorIdCol = routeData.getColumnIndex("userId");
+                    int titleCol = routeData.getColumnIndex("title");
+                    int descriptionCol = routeData.getColumnIndex("description");
+                    int interestCol = routeData.getColumnIndex("interest");
+                    int typeCol = routeData.getColumnIndex("type");
+
+                    authorOfRouteId = routeData.getInt(authorIdCol);
+                    routeAutor.setText(String.valueOf(routeData.getInt(authorIdCol)));
+                    routeTitle.setText(routeData.getString(titleCol));
+                    routeDescription.setText(routeData.getString(descriptionCol));
+                    routeInterest.setText(routeData.getString(interestCol));
+                    routeTypeDisplacement.setText(routeData.getString(typeCol));
+
+                }else
+                    Log.d("out_route", "0 rows");
+                routeData.close();
+
+                //второй запрос на получение имени автора маршрута
+               selection = "id = ?";
+               selectionArgs = new String[]{(String.valueOf(authorOfRouteId))};
+               Cursor authorData = db.query("users", null, selection, selectionArgs, null, null, null);
+                if (authorData.moveToFirst()) {
+                    int loginCol = authorData.getColumnIndex("login");
+                    routeAutor.setText(String.valueOf(authorData.getString(loginCol)));
+                }else
+                    Log.d("out_route", "0 rows");
+                authorData.close();
+
+                //TODO сделать запрос на получение точек и отобразить их в ресайкл вью.
+                //третий запрос на получение точек маршрута.
+                selection = "routeId = ?";
+                selectionArgs = new String[]{(String.valueOf(route.getId()))};
+                Cursor pointsOfROuteData = db.query("points", null, selection, selectionArgs, null, null, null);
+                if (pointsOfROuteData.moveToFirst()) {
+                    int loginCol = pointsOfROuteData.getColumnIndex("login");
+//                    routeAutor.setText(String.valueOf(pointsOfROuteData.getString(loginCol)));
+                }else
+                    Log.d("out_route", "0 rows");
+                authorData.close();
 
                 //Создаем AlertDialog
                 final AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(getContext());
 
                 //Настраиваем dialog_create_point_activity_create_route.xml для нашего AlertDialog:
-                mDialogBuilder.setView(showInfoAboutRoute);
+                mDialogBuilder.setView(infoAboutRoute);
                 //Настраиваем сообщение в диалоговом окне:
                 mDialogBuilder
                         .setCancelable(false)
@@ -133,7 +198,7 @@ public class AllRoutesFragment extends Fragment {
             }
         };
 
-        allRoutesAdapter = new AllRoutesAdapter(allRoutesListener,this);
+        allRoutesAdapter = new AllRoutesAdapter(allRoutesListener, this);
         recyclerViewAllRoutes.setAdapter(allRoutesAdapter);
         // создаем объект для создания и управления версиями БД
         dbHelper = new DBHelper(recyclerViewAllRoutes.getContext());

@@ -4,20 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:isScrollContainer="false"
     tools:context=".activitys.ActivityCreateRoute">
 
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentBottom="false"
             android:orientation="vertical">
 
             <TextView
@@ -85,8 +85,9 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="226dp"
-                android:isScrollContainer="false">
+                android:layout_height="250dp"
+                android:isScrollContainer="false"
+                android:nestedScrollingEnabled="true">
 
                 <TableLayout
                     android:id="@+id/table_layout_points_activity_create_route"
@@ -95,20 +96,13 @@
                     android:isScrollContainer="true" />
             </ScrollView>
 
+            <Button
+                android:id="@+id/button_create_route"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="create" />
+
         </LinearLayout>
     </ScrollView>
 
-
-    <Button
-        android:id="@+id/button_create_route"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="Create route"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.27"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
-        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

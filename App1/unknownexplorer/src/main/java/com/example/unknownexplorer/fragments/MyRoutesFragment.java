@@ -138,7 +138,7 @@ public class MyRoutesFragment extends Fragment {
     }
 
     private void loadPoints(long routeId) {
-        Log.d("test load", "loadPoints  from my_routes fragment");
+        Log.d("test", "loadPoints  from my_routes fragment");
         Collection<Point> points = getPoints(routeId);
         for (int i = 0; i < points.size(); i++) {
             Log.d("point", "loadPoints: " + points);
@@ -199,7 +199,7 @@ public class MyRoutesFragment extends Fragment {
                 //получаем ресайкл вью из вида диалогового окна.
                 recyclerViewPoints = editRouteDialogWindow.findViewById(R.id.recycler_view_edit_route);
 
-                View pointRecyclerItem = inflater.inflate(R.layout.recycler_item_points_of_route, null);
+                View pointRecyclerItem = inflater.inflate(R.layout.recycler_item_points_of_my_route, null);
 
                 recyclerViewPoints.setLayoutManager(new LinearLayoutManager(pointRecyclerItem.getContext()));
 
@@ -209,7 +209,6 @@ public class MyRoutesFragment extends Fragment {
                         SQLiteDatabase db = dbHelper.getWritableDatabase();
                         //получаем данные из базы данных
                         db.delete("points", "id = " + point.getId(), null);
-                        pointsOfRouteAdapter.notifyDataSetChanged();
                         loadPoints(point.getId());
                     }
                 };

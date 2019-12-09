@@ -41,7 +41,7 @@ public class PointsOfRouteAdapter extends RecyclerView.Adapter<PointsOfRouteAdap
     public PointsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d("test","onCreateViewHolder from PointsAdapter");
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycler_item_points_of_route, parent, false);
+                .inflate(R.layout.recycler_item_points_of_my_route, parent, false);
         return new PointsViewHolder(view);
 
     }
@@ -88,22 +88,18 @@ public class PointsOfRouteAdapter extends RecyclerView.Adapter<PointsOfRouteAdap
             yCoord = itemView.findViewById(R.id.y_coord_point);
             deleteButton = itemView.findViewById(R.id.delete_button_point);
 
-            itemView.findViewById(R.id.delete_button_point).setOnClickListener(new View.OnClickListener() {
+            deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Point point = pointList.get(getLayoutPosition());
                     onPointClickListener.onDeletePoint(point);
+
                 }
             });
 
         }
 
         public void bind(Point point) {
-            Log.d("test","bind from PointsAdapter");
-            Log.d("test","bind from PointsAdapter +" +point.getName());
-            Log.d("test","bind from PointsAdapter +" +point.getXCoord());
-            Log.d("test","bind from PointsAdapter +" +point.getYCoord());
-            Log.d("test","bind from PointsAdapter +" +point.getId());
             pointTitle.setText(point.getName());
             xCoord.setText(point.getXCoord());
             yCoord.setText(point.getYCoord());
