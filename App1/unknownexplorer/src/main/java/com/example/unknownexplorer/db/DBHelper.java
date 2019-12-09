@@ -35,8 +35,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table points ("
                 + "routeId integer,"
                 + "id integer primary key autoincrement,"
-//                + "title text,"
-//                + "description text,"
+                + "title text,"
+                + "xCoord text,"
+                + "yCoord text,"
                 + "FOREIGN KEY(routeId) REFERENCES routes(id)"+");");
     }
 

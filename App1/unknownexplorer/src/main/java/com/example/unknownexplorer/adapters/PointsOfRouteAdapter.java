@@ -60,8 +60,8 @@ public class PointsOfRouteAdapter extends RecyclerView.Adapter<PointsOfRouteAdap
 
 
     public void setItems(Collection<Point> points) {
-        clearItems();
         Log.d("test","setItems from PointsAdapter");
+        clearItems();
         pointList.addAll(points);
         notifyDataSetChanged();
     }
@@ -74,7 +74,7 @@ public class PointsOfRouteAdapter extends RecyclerView.Adapter<PointsOfRouteAdap
 
     class PointsViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView nameTextView;
+        private TextView pointTitle;
         private TextView xCoord;
         private TextView yCoord;
         private Button deleteButton;
@@ -83,7 +83,7 @@ public class PointsOfRouteAdapter extends RecyclerView.Adapter<PointsOfRouteAdap
 
         public PointsViewHolder(View itemView){
             super(itemView);
-            nameTextView = itemView.findViewById(R.id.name_point);
+            pointTitle = itemView.findViewById(R.id.name_point);
             xCoord = itemView.findViewById(R.id.x_coord_point);
             yCoord = itemView.findViewById(R.id.y_coord_point);
             deleteButton = itemView.findViewById(R.id.delete_button_point);
@@ -100,7 +100,11 @@ public class PointsOfRouteAdapter extends RecyclerView.Adapter<PointsOfRouteAdap
 
         public void bind(Point point) {
             Log.d("test","bind from PointsAdapter");
-            nameTextView.setText(point.getName());
+            Log.d("test","bind from PointsAdapter +" +point.getName());
+            Log.d("test","bind from PointsAdapter +" +point.getXCoord());
+            Log.d("test","bind from PointsAdapter +" +point.getYCoord());
+            Log.d("test","bind from PointsAdapter +" +point.getId());
+            pointTitle.setText(point.getName());
             xCoord.setText(point.getXCoord());
             yCoord.setText(point.getYCoord());
         }

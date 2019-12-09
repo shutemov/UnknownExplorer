@@ -120,8 +120,11 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
 
                                 //задаем LayoutParams
                                 title.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                                title.setId(4);
                                 X.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                                X.setId(3);
                                 Y.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                                Y.setId(2);
                                 deletePoint.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                                 deletePoint.setId(1);
 
@@ -198,8 +201,16 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                 Log.d("insertRoute", "row inserted, ID = " + routeID);
 
                 for (int i = 0; i < tablePoints.getChildCount(); i++) {
+
+
                     ContentValues pointContent = new ContentValues();
                     pointContent.put("routeId", routeID);
+                    @SuppressLint("ResourceType") TextView titleColInTablePoints = tablePoints.getChildAt(i).findViewById(4);
+                    @SuppressLint("ResourceType") TextView xCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(3);
+                    @SuppressLint("ResourceType") TextView yCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(2);
+                    pointContent.put("title", titleColInTablePoints.getText().toString());
+                    pointContent.put("xCoord", xCoordColInTablePoints.getText().toString());
+                    pointContent.put("yCoord", yCoordColInTablePoints.getText().toString());
                     long pointID = db.insert("points", null, pointContent);
                     Log.d("insertPoint", "row inserted, ID = " + pointID + " into route, ID = " + routeID);
                 }

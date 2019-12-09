@@ -47,38 +47,42 @@ public class MyRoutesFragment extends Fragment {
         Log.d("test", "getPoints  from my_routes fragment");
 
         ArrayList<Point> points = new ArrayList<>();
-        // данные для запроса
+
+        // данные для запроса получения точек маршрута.
         String selection = "routeId = ?";
         String[] selectionArgs = new String[]{(String.valueOf(routeId))};
 
         // подключаемся к БД
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        //получаем данные из базы данных
-        Cursor dataRoutes = db.query("points", null, selection, selectionArgs, null, null, null);
 
-        if (dataRoutes.moveToFirst()) {
+        //получаем данные о точке маршрута из базы данных.
+        Cursor dataPoints = db.query("points", null, selection, selectionArgs, null, null, null);
+
+        if (dataPoints.moveToFirst()) {
             // определяем номера столбцов по имени в выборке
-            int idColIndex = dataRoutes.getColumnIndex("id");
-//            int titleColIndex = dataRoutes.getColumnIndex("title");
+            int idColIndex = dataPoints.getColumnIndex("id");
+            int titleColIndex = dataPoints.getColumnIndex("title");
+            int xCoordColIndex = dataPoints.getColumnIndex("xCoord");
+            int yCoordColIndex = dataPoints.getColumnIndex("yCoord");
             do {
                 // получаем значения по номерам столбцов и пишем все в лог
-                Log.d("out_route",
-                        "ID = " + dataRoutes.getInt(idColIndex)
-//                                ", title = " + dataRoutes.getString(titleColIndex)
+                Log.d("out_points",
+                        "ID = " + dataPoints.getInt(idColIndex)
                 );
 
                 //добавляем в список маршруты из бд
                 points.add(
                         new Point(
-                                dataRoutes.getInt(idColIndex),
-                                "test",
-                                "test",
-                                "test")
+                                dataPoints.getInt(idColIndex),
+                                dataPoints.getString(titleColIndex),
+                                dataPoints.getString(xCoordColIndex),
+                                dataPoints.getString(yCoordColIndex)
+                        )
                 );
-            } while (dataRoutes.moveToNext());
+            } while (dataPoints.moveToNext());
         } else
             Log.d("out_route", "0 rows");
-        dataRoutes.close();
+        dataPoints.close();
 
         return points;
     }
@@ -152,6 +156,8 @@ public class MyRoutesFragment extends Fragment {
 
     public View onCreateView(@NonNull final LayoutInflater inflater,
                              final ViewGroup container, Bundle savedInstanceState) {
+
+        // todo ЗАРЕФАКТОРИТЬ ОБЪЯВЛЕНИЕ ЭЛЕМЕНТОВ
 
         final View root = inflater.inflate(R.layout.my_routes, container, false);
 
@@ -235,18 +241,30 @@ public class MyRoutesFragment extends Fragment {
                 final EditText inputPointXCoord = editRouteDialogWindow.findViewById(R.id.input_point_x_coord);
                 final EditText inputPointYCoord = editRouteDialogWindow.findViewById(R.id.input_point_y_coord);
 
-                Log.d("add point button1", "onClick: " + buttonAddPoint);
                 buttonAddPoint.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //подключаемся к бд.
+
+                        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                        //создаем данные для точки маршрута.
+                        ContentValues newPointData = new ContentValues();
+                        newPointData.put("routeId", route.getId());
+                        newPointData.put("title", inputPointName.getText().toString());
+                        newPointData.put("xCoord", inputPointXCoord.getText().toString());
+                        newPointData.put("yCoord", inputPointYCoord.getText().toString());
+
+                        //добавляем точку маршрут.
+                        db.insert("points", "", newPointData);
+
+                        //обновляем ресайкл вью
+                        loadPoints(route.getId());
+
+                        //очищаем данные воода.
                         inputPointName.setText("");
                         inputPointXCoord.setText("");
                         inputPointYCoord.setText("");
-                        SQLiteDatabase db = dbHelper.getWritableDatabase();
-                        ContentValues newPointData = new ContentValues();
-                        newPointData.put("routeId", route.getId());
-                        db.insert("points", "", newPointData);
-                        loadPoints(route.getId());
                         Log.d("add point button", "onClick: " + v);
                     }
                 });

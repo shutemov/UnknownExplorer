@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.unknownexplorer.R;
+import com.example.unknownexplorer.fragments.AllRoutesFragment;
 import com.example.unknownexplorer.models.Route;
 
 import java.util.ArrayList;
@@ -20,11 +21,23 @@ import java.util.List;
 public class AllRoutesAdapter extends RecyclerView.Adapter<AllRoutesAdapter.RoutesViewHolder> {
 
 
+    private OnAllRoutesClickListener onAllRoutesClickListener;
+    private AllRoutesFragment context;
+
+    public interface OnAllRoutesClickListener {
+        void onRouteClick(Route route);
+    }
+
+    public AllRoutesAdapter(OnAllRoutesClickListener _onMyROutesClickListener, AllRoutesFragment _contex) {
+        this.onAllRoutesClickListener = _onMyROutesClickListener;
+        this.context = _contex;
+    }
+
 
     @NonNull
     @Override
     public RoutesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d("test","onCreateViewHolder from RoutersAdapter");
+        Log.d("test", "onCreateViewHolder from RoutersAdapter");
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_item_all_routes, parent, false);
         return new RoutesViewHolder(view);
@@ -33,13 +46,13 @@ public class AllRoutesAdapter extends RecyclerView.Adapter<AllRoutesAdapter.Rout
 
     @Override
     public void onBindViewHolder(@NonNull RoutesViewHolder holder, int position) {
-        Log.d("test","onBindViewHolder from RoutersAdapter");
+        Log.d("test", "onBindViewHolder from RoutersAdapter");
         holder.bind(routeList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        Log.d("test","getItemCount() from RoutersAdapter");
+        Log.d("test", "getItemCount() from RoutersAdapter");
         return routeList.size();
     }
 
@@ -48,7 +61,7 @@ public class AllRoutesAdapter extends RecyclerView.Adapter<AllRoutesAdapter.Rout
 
     public void setItems(Collection<Route> routes) {
         clearItems();
-        Log.d("test","setItems from RoutersAdapter");
+        Log.d("test", "setItems from RoutersAdapter");
         routeList.addAll(routes);
         notifyDataSetChanged();
     }
@@ -59,7 +72,6 @@ public class AllRoutesAdapter extends RecyclerView.Adapter<AllRoutesAdapter.Rout
     }
 
 
-
     class RoutesViewHolder extends RecyclerView.ViewHolder {
 
         private TextView titleTextView;
@@ -68,25 +80,35 @@ public class AllRoutesAdapter extends RecyclerView.Adapter<AllRoutesAdapter.Rout
         private TextView typeTextView;
         private TextView timeTextView;
         private TextView ratingTextView;
-        private ImageView routerPick ;
+        private ImageView routerPick;
 
 
-        public RoutesViewHolder(View itemView){
+        public RoutesViewHolder(View itemView) {
             super(itemView);
-            Log.d("test","PointsViewHolder from RoutersAdapter");
+            Log.d("test", "PointsViewHolder from RoutersAdapter");
             titleTextView = itemView.findViewById(R.id.text_title_router_all_routes);
-            Log.d("test", "PointsViewHolder: titleText "+titleTextView );
+            Log.d("test", "PointsViewHolder: titleText " + titleTextView);
             descriptionTextView = itemView.findViewById(R.id.text_description_router_all_routes);
             interestTextView = itemView.findViewById(R.id.text_interest_router_my_routes);
             typeTextView = itemView.findViewById(R.id.text_type_router_all_routes);
             timeTextView = itemView.findViewById(R.id.text_time_router_all_routes);
             ratingTextView = itemView.findViewById(R.id.text_rating_router_all_routes);
+
+
+            itemView.findViewById(R.id.info_about_route_element).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Route route = routeList.get(getLayoutPosition());
+                    onAllRoutesClickListener.onRouteClick(route);
+                }
+            });
+
 //            routerPick = itemView.findViewById(R.id.image_pic_router_all_routes);
-            Log.d("test", "PointsViewHolder: descText "+descriptionTextView );
+            Log.d("test", "PointsViewHolder: descText " + descriptionTextView);
         }
 
         public void bind(Route route) {
-            Log.d("test","bind from RoutersAdapter");
+            Log.d("test", "bind from RoutersAdapter");
 
             titleTextView.setText(route.getTitle());
             descriptionTextView.setText(route.getDescription());

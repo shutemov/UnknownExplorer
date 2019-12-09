@@ -1,5 +1,7 @@
 package com.example.unknownexplorer.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -94,7 +96,44 @@ public class AllRoutesFragment extends Fragment {
         recyclerViewAllRoutes = root.findViewById(R.id.routes_recycler_view);
         View recycler_item = inflater.inflate(R.layout.recycler_item_points_of_route, null);
         recyclerViewAllRoutes.setLayoutManager(new LinearLayoutManager(recycler_item.getContext()));
-        allRoutesAdapter = new AllRoutesAdapter();
+
+        AllRoutesAdapter.OnAllRoutesClickListener allRoutesListener = new AllRoutesAdapter.OnAllRoutesClickListener() {
+            @Override
+            public void onRouteClick(Route route) {
+                Log.d("click", "onRouteClick: !!! " + route.getId());
+                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+
+                //Получаем вид диалогового окна
+                final View showInfoAboutRoute = layoutInflater.inflate(R.layout.info_about_route, null);
+
+                //Создаем AlertDialog
+                final AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(getContext());
+
+                //Настраиваем dialog_create_point_activity_create_route.xml для нашего AlertDialog:
+                mDialogBuilder.setView(showInfoAboutRoute);
+                //Настраиваем сообщение в диалоговом окне:
+                mDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("Start",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                //Создаем AlertDialog:
+                AlertDialog alertDialog = mDialogBuilder.create();
+                //и отображаем его:
+                alertDialog.show();
+            }
+        };
+
+        allRoutesAdapter = new AllRoutesAdapter(allRoutesListener,this);
         recyclerViewAllRoutes.setAdapter(allRoutesAdapter);
         // создаем объект для создания и управления версиями БД
         dbHelper = new DBHelper(recyclerViewAllRoutes.getContext());
