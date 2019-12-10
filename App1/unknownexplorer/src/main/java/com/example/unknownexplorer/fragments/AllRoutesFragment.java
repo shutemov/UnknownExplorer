@@ -6,12 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -46,6 +48,12 @@ public class AllRoutesFragment extends Fragment {
 
         Collection<Route> routes = getRouters();
         allRoutesAdapter.setItems(routes);
+
+        Toast toast = Toast.makeText(getContext(),
+                "Все маршруты из системы загружены.",
+                Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.BOTTOM, 0, 10);
+        toast.show();
     }
 
     @org.jetbrains.annotations.NotNull
@@ -126,10 +134,12 @@ public class AllRoutesFragment extends Fragment {
 
                 // подключаемся к БД
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
+
                 //получаем данные из базы данных
                 Log.d("click", "onRouteClickkkk: " + route.getId());
                 String selection = "id = ?";
                 String[] selectionArgs = new String[]{(String.valueOf(route.getId()))};
+
                 // первый запрос на получение данных о маршруте
                 Cursor routeData = db.query("routes", null, selection, selectionArgs, null, null, null);
                 if (routeData.moveToFirst()) {
@@ -162,16 +172,16 @@ public class AllRoutesFragment extends Fragment {
                 authorData.close();
 
 
-                //TODO сделать таблицу показа точек маршрута.
+                //третий запрос на получение точек маршрута.
+
+                //таблица показа точек маршрута.
                 TableLayout tablePoints;
                 tablePoints = infoAboutRoute.findViewById(R.id.table_points_Info_route);
                 tablePoints.setStretchAllColumns(true);
 
-
-                //TODO сделать запрос на получение точек и отобразить их в ресайкл вью.
-                //третий запрос на получение точек маршрута.
                 selection = "routeId = ?";
                 selectionArgs = new String[]{(String.valueOf(route.getId()))};
+
                 Cursor pointsOfROuteData = db.query("points", null, selection, selectionArgs, null, null, null);
                 if (pointsOfROuteData.moveToFirst()) {
                     int loginCol = pointsOfROuteData.getColumnIndex("login");

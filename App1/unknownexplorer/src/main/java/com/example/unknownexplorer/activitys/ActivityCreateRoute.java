@@ -6,10 +6,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -97,56 +98,68 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                         new DialogInterface.OnClickListener() {
                             @SuppressLint("ResourceType")
                             public void onClick(DialogInterface dialog, int id) {
-                                // Добавляем tableRow в TableLayout на основном экране
-                                TableRow tableRow = new TableRow(context);
 
-                                tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                                tablePoints.setStretchAllColumns(true);
+                                String pointTitle = inputTextPointTitle.getText().toString();
+                                String pointXCoord= inputTextPointXCoord.getText().toString();
+                                String pointYCoord= inputTextPointYCoord.getText().toString();
 
+                                if (!pointTitle.equals("") && !pointXCoord.equals("") && !pointYCoord.equals("")){
 
-                                //Создаем элементы tableRow
-                                TextView title = new TextView(context);
-                                TextView X = new TextView(context);
-                                TextView Y = new TextView(context);
-                                deletePoint = new Button(context);
+                                    // Добавляем tableRow в TableLayout на основном экране
+                                    TableRow tableRow = new TableRow(context);
 
-
-                                //Присваеваем значения из диалогового окна
-                                title.setText(inputTextPointTitle.getText());
-                                X.setText(inputTextPointXCoord.getText());
-                                Y.setText(inputTextPointYCoord.getText());
-                                deletePoint.setText("X");
+                                    tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                                    tablePoints.setStretchAllColumns(true);
 
 
-                                //задаем LayoutParams
-                                title.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                                title.setId(4);
-                                X.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                                X.setId(3);
-                                Y.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                                Y.setId(2);
-                                deletePoint.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                                deletePoint.setId(1);
-
-                                //добавляем элементы в tableRow
-                                tableRow.addView(title);
-                                tableRow.addView(X);
-                                tableRow.addView(Y);
-                                tableRow.addView(deletePoint);
-                                tablePoints.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-
-                                //удаление точки маршрута из таблицы
-                                deletePoint.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        //получаем к
-                                        final View colTableRow = v.findViewById(1);
-                                        tablePoints.removeView((View) colTableRow.getParent());
-                                    }
-                                });
+                                    //Создаем элементы tableRow
+                                    TextView title = new TextView(context);
+                                    TextView X = new TextView(context);
+                                    TextView Y = new TextView(context);
+                                    deletePoint = new Button(context);
 
 
+                                    //Присваеваем значения из диалогового окна
+                                    title.setText(inputTextPointTitle.getText());
+                                    X.setText(inputTextPointXCoord.getText());
+                                    Y.setText(inputTextPointYCoord.getText());
+                                    deletePoint.setText("X");
 
+
+                                    //задаем LayoutParams
+                                    title.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                                    title.setId(4);
+                                    X.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                                    X.setId(3);
+                                    Y.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                                    Y.setId(2);
+                                    deletePoint.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                                    deletePoint.setId(1);
+
+                                    //добавляем элементы в tableRow
+                                    tableRow.addView(title);
+                                    tableRow.addView(X);
+                                    tableRow.addView(Y);
+                                    tableRow.addView(deletePoint);
+                                    tablePoints.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+
+                                    //удаление точки маршрута из таблицы
+                                    deletePoint.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            //получаем к
+                                            final View colTableRow = v.findViewById(1);
+                                            tablePoints.removeView((View) colTableRow.getParent());
+                                        }
+                                    });
+                                }
+                                else{
+                                    Toast toast = Toast.makeText(getApplicationContext(),
+                                            "Введите все данные точки маршрута.",
+                                            Toast.LENGTH_SHORT);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
+                                }
                             }
                         })
                 .setNegativeButton("Cancel",
@@ -162,87 +175,52 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
 
         // подключаемся к БД
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-//        //TODO
-//        View tableRow = tablePoints.getChildAt(0);
-//
-//        @SuppressLint("ResourceType") final View colTableRow = tableRow.findViewById(1);
-//
-//        colTableRow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                switch (v.getId()){
-//                    case 1:
-//                        tablePoints.removeView((View) colTableRow.getParent());
-//                }
-//            }
-//        });
-
 
         switch (v.getId()) {
 
             case R.id.button_create_route:
-                Log.d("insertRoute", "--- Insert in mytable: ---");
                 String routeTitle = editTextTitle.getText().toString();
                 String routeDescription = editTextDescription.getText().toString();
-                String interest = spinnerInterest.getSelectedItem().toString();
-                String typeDisplacement = spinnerTypeOfDisplacement.getSelectedItem().toString();
+                String routeInterest = spinnerInterest.getSelectedItem().toString();
+                String routeTypeDisplacement = spinnerTypeOfDisplacement.getSelectedItem().toString();
 
+                if (!routeTitle.equals("") && !routeDescription.equals("") && !routeInterest.equals("") && !routeTypeDisplacement.equals("")) {
+                    Log.d("insertRoute", "--- Insert in mytable: ---");
 
-                // подготовим данные для вставки в виде пар: наименование столбца - значение
-                routeContent.put("userId", USER_ID);
-                routeContent.put("title", routeTitle);
-                routeContent.put("description", routeDescription);
-                routeContent.put("interest", interest);
-                routeContent.put("type", typeDisplacement);
+                    // подготовим данные для вставки в виде пар: наименование столбца - значение
+                    routeContent.put("userId", USER_ID);
+                    routeContent.put("title", routeTitle);
+                    routeContent.put("description", routeDescription);
+                    routeContent.put("interest", routeInterest);
+                    routeContent.put("type", routeTypeDisplacement);
+                    // вставляем запись и получаем ее ID
+                    long routeID = db.insert("routes", null, routeContent);
+                    Log.d("insertRoute", "row inserted, ID = " + routeID);
 
-
-                // вставляем запись и получаем ее ID
-                long routeID = db.insert("routes", null, routeContent);
-                Log.d("insertRoute", "row inserted, ID = " + routeID);
-
-                for (int i = 0; i < tablePoints.getChildCount(); i++) {
-
-
-                    ContentValues pointContent = new ContentValues();
-                    pointContent.put("routeId", routeID);
-                    @SuppressLint("ResourceType") TextView titleColInTablePoints = tablePoints.getChildAt(i).findViewById(4);
-                    @SuppressLint("ResourceType") TextView xCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(3);
-                    @SuppressLint("ResourceType") TextView yCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(2);
-                    pointContent.put("title", titleColInTablePoints.getText().toString());
-                    pointContent.put("xCoord", xCoordColInTablePoints.getText().toString());
-                    pointContent.put("yCoord", yCoordColInTablePoints.getText().toString());
-                    long pointID = db.insert("points", null, pointContent);
-                    Log.d("insertPoint", "row inserted, ID = " + pointID + " into route, ID = " + routeID);
+                    for (int i = 0; i < tablePoints.getChildCount(); i++) {
+                        ContentValues pointContent = new ContentValues();
+                        pointContent.put("routeId", routeID);
+                        @SuppressLint("ResourceType") TextView titleColInTablePoints = tablePoints.getChildAt(i).findViewById(4);
+                        @SuppressLint("ResourceType") TextView xCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(3);
+                        @SuppressLint("ResourceType") TextView yCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(2);
+                        pointContent.put("title", titleColInTablePoints.getText().toString());
+                        pointContent.put("xCoord", xCoordColInTablePoints.getText().toString());
+                        pointContent.put("yCoord", yCoordColInTablePoints.getText().toString());
+                        long pointID = db.insert("points", null, pointContent);
+                        Log.d("insertPoint", "row inserted, ID = " + pointID + " into route, ID = " + routeID);
+                    }
+//                  Todo: issue при клике на кнопку "my routes" в навигации, возвращает на создание маршрута.
+                    Intent intent = new Intent("ActivityMainNavigation");
+                    this.finish();
+                    startActivity(intent);
+                } else {
+                    //создаём и отображаем текстовое уведомление
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Введите все данные и не менее 1 точки маршрута.",
+                            Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
                 }
-
-                //делаем вывод данных в логе
-                Cursor c = db.query("routes", null, null, null, null, null, null);
-
-                if (c.moveToFirst()) {
-
-                    // определяем номера столбцов по имени в выборке
-                    int idColIndex = c.getColumnIndex("id");
-                    int idUserColIndex = c.getColumnIndex("userId");
-                    int titleColIndex = c.getColumnIndex("title");
-//                    int emailColIndex = c.getColumnIndex("email");
-
-                    do {
-                        // получаем значения по номерам столбцов и пишем все в лог
-                        Log.d("out_route",
-                                "ID = " + c.getInt(idColIndex) +
-                                        "userId = " + c.getInt(idUserColIndex) +
-                                        ", name = " + c.getString(titleColIndex)
-                        );
-                        // переход на следующую строку
-                        // а если следующей нет (текущая - последняя), то false - выходим из цикла
-                    } while (c.moveToNext());
-                } else
-                    Log.d("out_route", "0 rows");
-                c.close();
-//                Todo: при клике на кнопку "my routes" в навигации, возвращает на создание маршрута.
-                Intent intent = new Intent("ActivityMainNavigation");
-                this.finish();
-                startActivity(intent);
                 break;
             case R.id.button_add_point_route:
                 //Создаем AlertDialog:

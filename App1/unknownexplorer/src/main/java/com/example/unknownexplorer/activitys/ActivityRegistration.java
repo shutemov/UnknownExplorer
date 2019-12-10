@@ -6,9 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,7 +20,7 @@ import com.example.unknownexplorer.db.DBHelper;
 public class ActivityRegistration extends AppCompatActivity implements View.OnClickListener {
 
 
-    // !!!! зарефакторить объявление элементов активити и их id.
+    // TODO зарефакторить объявление элементов активити и их id.
     Button btnRegistration;
     EditText inputLogin;
     EditText inputPassword;
@@ -78,6 +80,12 @@ public class ActivityRegistration extends AppCompatActivity implements View.OnCl
                     db.insert("users", null, userContent);
                     intent = new Intent(this, ActivityLogin.class);
                     startActivity(intent);
+                }else {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Пароли не совпадают или такой пользовател уже существует.",
+                            Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.BOTTOM, 0, 10);
+                    toast.show();
                 }
                 break;
         }

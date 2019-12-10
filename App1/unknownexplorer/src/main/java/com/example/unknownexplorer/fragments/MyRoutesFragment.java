@@ -8,12 +8,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -138,20 +140,34 @@ public class MyRoutesFragment extends Fragment {
     }
 
     private void loadPoints(long routeId) {
+
+
+
         Log.d("test", "loadPoints  from my_routes fragment");
         Collection<Point> points = getPoints(routeId);
         for (int i = 0; i < points.size(); i++) {
             Log.d("point", "loadPoints: " + points);
         }
         pointsOfRouteAdapter.setItems(points);
-    }
 
-    ;
+        // выводим информацию о загрузке маршрутов.
+        Toast toast = Toast.makeText(getContext(),
+                "Данные точек вашего маршрута обновлены.",
+                Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.BOTTOM, 0, 10);
+        toast.show();
+    };
 
     private void loadRouters() {
         Log.d("test", "loadRouters  from my_routes fragment");
         Collection<Route> routes = getRoutes();
         myRoutesAdapter.setItems(routes);
+
+        Toast toast = Toast.makeText(getContext(),
+                "Информация о маршрутах загружена.",
+                Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.BOTTOM, 0, 10);
+        toast.show();
     }
 
     public View onCreateView(@NonNull final LayoutInflater inflater,

@@ -6,9 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,8 +37,8 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
         inputLogin = findViewById(R.id.inputLogin);
         inputPassword = findViewById(R.id.inputPasswordLoginScreen);
 
-        inputLogin.setText("j");
-        inputPassword.setText("1");
+//        inputLogin.setText("j");
+//        inputPassword.setText("1");
 
         btnLogin.setOnClickListener(this);
         txRegistration.setOnClickListener(this);
@@ -66,33 +68,6 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                 Log.d("login", "onClick: " + data.getCount() + " " + data.moveToFirst());
 
 
-                // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ DELETE THIS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-                Cursor allUsers = db.query("users", null, null, null, null, null, null);
-                Log.d("login", "onClick: " + data.getCount() + " " + data.moveToFirst());
-                if (allUsers.moveToFirst()) {
-
-                    // определяем номера столбцов по имени в выборке
-                    int idColIndex = allUsers.getColumnIndex("login");
-                    int idColIndex1 = allUsers.getColumnIndex("id");
-                    int titleColIndex = allUsers.getColumnIndex("password");
-//                    int emailColIndex = c.getColumnIndex("email");
-
-                    do {
-                        // получаем значения по номерам столбцов и пишем все в лог
-                        Log.d("all users in system",
-                                "login = " + allUsers.getString(idColIndex) +
-                                        ", password = " + allUsers.getString(titleColIndex)+
-                                        ", ID = " + allUsers.getString(idColIndex1)
-                        );
-                        // переход на следующую строку
-                        // а если следующей нет (текущая - последняя), то false - выходим из цикла
-                    } while (allUsers.moveToNext());
-                } else
-                    Log.d("all users in system", "0 rows");
-                allUsers.close();
-// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ DELETE THIS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
                 if (data.moveToFirst() && (data.getCount() == 1)) {
                     intent = new Intent("ActivityMainNavigation");
 
@@ -102,6 +77,13 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                     intent.putExtra("userId", data.getInt(idCol));
                     intent.putExtra("userLogin",data.getString(loginColIndex));
                     startActivity(intent);
+                }
+                else{
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Логин или пароль не совпадают.",
+                            Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.BOTTOM, 0, 10);
+                    toast.show();
                 }
                 break;
             case R.id.txRegistration:
