@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -125,7 +127,7 @@ public class AllRoutesFragment extends Fragment {
                 // подключаемся к БД
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 //получаем данные из базы данных
-                Log.d("click", "onRouteClickkkk: "+ route.getId());
+                Log.d("click", "onRouteClickkkk: " + route.getId());
                 String selection = "id = ?";
                 String[] selectionArgs = new String[]{(String.valueOf(route.getId()))};
                 // первый запрос на получение данных о маршруте
@@ -144,20 +146,27 @@ public class AllRoutesFragment extends Fragment {
                     routeInterest.setText(routeData.getString(interestCol));
                     routeTypeDisplacement.setText(routeData.getString(typeCol));
 
-                }else
+                } else
                     Log.d("out_route", "0 rows");
                 routeData.close();
 
                 //второй запрос на получение имени автора маршрута
-               selection = "id = ?";
-               selectionArgs = new String[]{(String.valueOf(authorOfRouteId))};
-               Cursor authorData = db.query("users", null, selection, selectionArgs, null, null, null);
+                selection = "id = ?";
+                selectionArgs = new String[]{(String.valueOf(authorOfRouteId))};
+                Cursor authorData = db.query("users", null, selection, selectionArgs, null, null, null);
                 if (authorData.moveToFirst()) {
                     int loginCol = authorData.getColumnIndex("login");
                     routeAutor.setText(String.valueOf(authorData.getString(loginCol)));
-                }else
+                } else
                     Log.d("out_route", "0 rows");
                 authorData.close();
+
+
+                //TODO сделать таблицу показа точек маршрута.
+                TableLayout tablePoints;
+                tablePoints = infoAboutRoute.findViewById(R.id.table_points_Info_route);
+                tablePoints.setStretchAllColumns(true);
+
 
                 //TODO сделать запрос на получение точек и отобразить их в ресайкл вью.
                 //третий запрос на получение точек маршрута.
@@ -167,9 +176,47 @@ public class AllRoutesFragment extends Fragment {
                 if (pointsOfROuteData.moveToFirst()) {
                     int loginCol = pointsOfROuteData.getColumnIndex("login");
 //                    routeAutor.setText(String.valueOf(pointsOfROuteData.getString(loginCol)));
-                }else
+                    //Присваеваем значения из диалогового окна
+                    for (int i=0 ; i< pointsOfROuteData.getCount();i++){
+                        // Добавляем tableRow в TableLayout на основном экране
+                        TableRow tableRow = new TableRow(getContext());
+
+                        tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                        tablePoints.setStretchAllColumns(true);
+
+                        //Создаем элементы tableRow
+                        TextView title = new TextView(getContext());
+                        TextView X = new TextView(getContext());
+                        TextView Y = new TextView(getContext());
+
+                        //задаем LayoutParams
+                        title.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                        X.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                        Y.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+
+                        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        X.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        Y.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+                        int titlePointCol = pointsOfROuteData.getColumnIndex("title");
+                        int xCoordPointCol = pointsOfROuteData.getColumnIndex("xCoord");
+                        int yCoordPointCol = pointsOfROuteData.getColumnIndex("yCoord");
+
+                        title.setText(pointsOfROuteData.getString(titlePointCol));
+                        X.setText(pointsOfROuteData.getString(xCoordPointCol));
+                        Y.setText(pointsOfROuteData.getString(yCoordPointCol));
+
+                        //добавляем элементы в tableRow
+                        tableRow.addView(title);
+                        tableRow.addView(X);
+                        tableRow.addView(Y);
+                        tablePoints.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                        pointsOfROuteData.moveToNext();
+                    }
+                } else
                     Log.d("out_route", "0 rows");
                 authorData.close();
+
 
                 //Создаем AlertDialog
                 final AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(getContext());

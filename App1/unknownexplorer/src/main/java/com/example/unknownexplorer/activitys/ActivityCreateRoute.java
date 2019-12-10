@@ -241,8 +241,8 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                 c.close();
 //                Todo: при клике на кнопку "my routes" в навигации, возвращает на создание маршрута.
                 Intent intent = new Intent("ActivityMainNavigation");
+                this.finish();
                 startActivity(intent);
-                super.onDestroy();
                 break;
             case R.id.button_add_point_route:
                 //Создаем AlertDialog:

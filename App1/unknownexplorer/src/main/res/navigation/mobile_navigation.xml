@@ -3,41 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_all_routes">
 
     <fragment
-        android:id="@+id/nav_home"
+        android:id="@+id/nav_all_routes"
         android:name="com.example.unknownexplorer.fragments.AllRoutesFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/all_routes" />
 
     <fragment
-        android:id="@+id/nav_gallery"
+        android:id="@+id/nav_my_routes"
         android:name="com.example.unknownexplorer.fragments.MyRoutesFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/my_routes" />
-
+    <action android:id="@+id/action_global_nav_my_routes" app:destination="@id/nav_my_routes" />
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.unknownexplorer.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_exit"
+        android:name="com.example.unknownexplorer.fragments.ExitFragment"
+        android:label="Exit"
+        tools:layout="@layout/fragment_exit" />
 
-    <fragment
-        android:id="@+id/nav_tools"
-        android:name="com.example.unknownexplorer.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
-
-    <fragment
-        android:id="@+id/nav_share"
-        android:name="com.example.unknownexplorer.ui.share.ShareFragment"
-        android:label="@string/menu_share"
-        tools:layout="@layout/fragment_share" />
-
-    <fragment
-        android:id="@+id/nav_send"
-        android:name="com.example.unknownexplorer.ui.send.SendFragment"
-        android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
 </navigation>

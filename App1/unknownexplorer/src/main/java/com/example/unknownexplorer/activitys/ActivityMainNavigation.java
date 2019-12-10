@@ -56,11 +56,17 @@ public class ActivityMainNavigation extends AppCompatActivity implements Navigat
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send)
+                R.id.nav_all_routes, R.id.nav_my_routes, R.id.nav_exit)
                 .setDrawerLayout(drawer)
                 .build();
 
+//        NavigationView exit = findViewById(R.id.nav_exit);
+//        exit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent("ActivityRegistration"));
+//            }
+//        });
         //отвечает за бергер кнопку и описание вбранного элемента меню.
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
@@ -94,7 +100,7 @@ public class ActivityMainNavigation extends AppCompatActivity implements Navigat
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         Log.d("test", "111");
         switch (menuItem.getItemId()) {
-            case R.id.nav_gallery: {
+            case R.id.nav_my_routes: {
                 Intent intent = new Intent(this, ActivityLogin.class);
                 startActivity(intent);
                 break;
