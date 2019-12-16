@@ -7,8 +7,8 @@ public class Point {
     String XCoord;
     String YCoord;
 
-    public long getId() {
-        return id;
+    public int getId() {
+        return (int) id;
     }
 
     public String getName() {

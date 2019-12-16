@@ -20,17 +20,23 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.unknownexplorer.POJO.PojoRoute;
 import com.example.unknownexplorer.R;
 import com.example.unknownexplorer.adapters.AllRoutesAdapter;
+import com.example.unknownexplorer.api.NetworkService;
 import com.example.unknownexplorer.db.DBHelper;
 import com.example.unknownexplorer.models.Route;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AllRoutesFragment extends Fragment {
 
-    //    private HomeViewModel homeViewModel;
     private RecyclerView recyclerViewAllRoutes;
     private AllRoutesAdapter allRoutesAdapter;
 
@@ -41,91 +47,84 @@ public class AllRoutesFragment extends Fragment {
     TextView routeInterest;
     TextView routeTypeDisplacement;
     RecyclerView recyclerViewAllPointsOfRoute;
+    SQLiteDatabase DB;
 
     DBHelper dbHelper;
 
-    private void loadRouters() {
 
-        Collection<Route> routes = getRouters();
-        allRoutesAdapter.setItems(routes);
-
-        Toast toast = Toast.makeText(getContext(),
-                "Все маршруты из системы загружены.",
-                Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.BOTTOM, 0, 10);
-        toast.show();
-    }
 
     @org.jetbrains.annotations.NotNull
-    private Collection<Route> getRouters() {
+    private void getRouters() throws IOException {
 
-        ArrayList<Route> routes = new ArrayList<>();
+        final ArrayList<Route> routes = new ArrayList<>();
 
-        Log.d("test", "getRouters  from home fragment");
-
-        // подключаемся к БД
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        //получаем данные из базы данных
-        Cursor data = db.query("routes", null, null, null, null, null, null);
-
-        if (data.moveToFirst()) {
-
-            // определяем номера столбцов по имени в выборке
-            int idColIndex = data.getColumnIndex("id");
-            int titleColIndex = data.getColumnIndex("title");
-            int descriptionColIndex = data.getColumnIndex("description");
-            int interestColIndex = data.getColumnIndex("interest");
-            int typeColIndex = data.getColumnIndex("type");
+        NetworkService.getInstance()
+                .getJSONApi()
+                .getAllRoutes()
+                .enqueue(new Callback<List<PojoRoute>>() {
+                    @Override
+                    public void onResponse(Call<List<PojoRoute>> call, Response<List<PojoRoute>> response) {
 
 
-            do {
-                // получаем значения по номерам столбцов и пишем все в лог
-                Log.d("out_route",
-                        "ID = " + data.getInt(idColIndex) +
-                                ", title = " + data.getString(titleColIndex)
-                );
-                // переход на следующую строку
-                // а если следующей нет (текущая - последняя), то false - выходим из цикла
+                        for (int i = 0; i < response.body().size(); i++) {
+                            Log.d("load pojoRoutes", "onResponse: " + response.body().get(i).getTitle());
+                            routes.add(new Route(
+                                    response.body().get(i).getId(),
+                                    response.body().get(i).getTitle(),
+                                    "description",
+                                    "interest",
+                                    "type",
+                                    "3x",
+                                    "3/5"
+                            ));
+                        }
+                        allRoutesAdapter.setItems(routes);
+                        recyclerViewAllRoutes.getAdapter().notifyDataSetChanged();
+                        Toast toast = Toast.makeText(getContext(),
+                                "Все маршруты загружены.",
+                                Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.BOTTOM, 0, 10);
+                        toast.show();
+                    }
 
-                //добавляем в список маршруты из бд
-                routes.add(
-                        new Route(
-                                data.getInt(idColIndex),
-                                data.getString(titleColIndex),
-                                data.getString(descriptionColIndex),
-                                data.getString(interestColIndex),
-                                data.getString(typeColIndex),
-                                "~2 ч.",
-                                "3/5"
-                        )
-                );
+                    @Override
+                    public void onFailure(Call<List<PojoRoute>> call, Throwable t) {
+                        Log.d("load pojoRoutes", "onFailure: " + t.getMessage());
+                    }
+                });
 
-            } while (data.moveToNext());
-        } else
-            Log.d("out_route", "0 rows");
-        data.close();
 
-        return routes;
     }
+
+    ;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.all_routes, container, false);
+        // получаем лайаут с ресайкл вью.
+        View root = inflater.inflate(R.layout.fragment_all_routes, container, false);
+        // находим в нем ресайкл вью.
         recyclerViewAllRoutes = root.findViewById(R.id.routes_recycler_view);
+
+        // получаем лайаут с ресайкл вью элементом.
         View recycler_item = inflater.inflate(R.layout.recycler_item_points_of_my_route, null);
         recyclerViewAllRoutes.setLayoutManager(new LinearLayoutManager(recycler_item.getContext()));
 
         AllRoutesAdapter.OnAllRoutesClickListener allRoutesListener = new AllRoutesAdapter.OnAllRoutesClickListener() {
             @Override
             public void onRouteClick(Route route) {
-                Log.d("click", "onRouteClick: !!! " + route.getId());
+
                 LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+
                 //Получаем вид диалогового окна
                 final View infoAboutRoute = layoutInflater.inflate(R.layout.info_about_route, null);
 
-                //получаем элементы диалогвого окна.
+
+                //если автора маршрута нет, вернет -1.
                 int authorOfRouteId = -1;
+
+                //получаем элементы диалогвого окна
                 routeAutor = infoAboutRoute.findViewById(R.id.info_route_autor);
                 routeTitle = infoAboutRoute.findViewById(R.id.info_route_title);
                 routeDescription = infoAboutRoute.findViewById(R.id.info_route_description);
@@ -136,12 +135,12 @@ public class AllRoutesFragment extends Fragment {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
 
                 //получаем данные из базы данных
-                Log.d("click", "onRouteClickkkk: " + route.getId());
                 String selection = "id = ?";
                 String[] selectionArgs = new String[]{(String.valueOf(route.getId()))};
 
-                // первый запрос на получение данных о маршруте
+                // первый запрос на получение данных о маршруте.
                 Cursor routeData = db.query("routes", null, selection, selectionArgs, null, null, null);
+
                 if (routeData.moveToFirst()) {
                     int authorIdCol = routeData.getColumnIndex("userId");
                     int titleCol = routeData.getColumnIndex("title");
@@ -160,7 +159,7 @@ public class AllRoutesFragment extends Fragment {
                     Log.d("out_route", "0 rows");
                 routeData.close();
 
-                //второй запрос на получение имени автора маршрута
+                //второй запрос на получение имени автора маршрута.
                 selection = "id = ?";
                 selectionArgs = new String[]{(String.valueOf(authorOfRouteId))};
                 Cursor authorData = db.query("users", null, selection, selectionArgs, null, null, null);
@@ -184,10 +183,10 @@ public class AllRoutesFragment extends Fragment {
 
                 Cursor pointsOfROuteData = db.query("points", null, selection, selectionArgs, null, null, null);
                 if (pointsOfROuteData.moveToFirst()) {
-                    int loginCol = pointsOfROuteData.getColumnIndex("login");
-//                    routeAutor.setText(String.valueOf(pointsOfROuteData.getString(loginCol)));
+
                     //Присваеваем значения из диалогового окна
-                    for (int i=0 ; i< pointsOfROuteData.getCount();i++){
+                    for (int i = 0; i < pointsOfROuteData.getCount(); i++) {
+
                         // Добавляем tableRow в TableLayout на основном экране
                         TableRow tableRow = new TableRow(getContext());
 
@@ -224,7 +223,7 @@ public class AllRoutesFragment extends Fragment {
                         pointsOfROuteData.moveToNext();
                     }
                 } else
-                    Log.d("out_route", "0 rows");
+                    Log.d("out_points", "0 rows");
                 authorData.close();
 
 
@@ -257,9 +256,13 @@ public class AllRoutesFragment extends Fragment {
 
         allRoutesAdapter = new AllRoutesAdapter(allRoutesListener, this);
         recyclerViewAllRoutes.setAdapter(allRoutesAdapter);
-        // создаем объект для создания и управления версиями БД
-        dbHelper = new DBHelper(recyclerViewAllRoutes.getContext());
-        loadRouters();
+
+        try {
+            getRouters();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return root;
     }
 

@@ -46,21 +46,18 @@ public class Route {
         return rating;
     }
 
-
     public long getId() {
         return id;
     }
 
-
-
     public String getTitle() {
-        Log.d("test","getTitle from Route");
+        Log.d("test","getTitle from PojoRoute");
         Log.d("test","VALUE TITLE " + title);
         return title;
     }
 
     public String getDescription() {
-        Log.d("test","getDescription from Route");
+        Log.d("test","getDescription from PojoRoute");
         Log.d("test","VALUE DESCR " + description);
         return description;
     }

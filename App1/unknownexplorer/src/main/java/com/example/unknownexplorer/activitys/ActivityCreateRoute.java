@@ -2,11 +2,8 @@ package com.example.unknownexplorer.activitys;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,8 +19,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.unknownexplorer.POJO.PojoPoint;
+import com.example.unknownexplorer.POJO.PojoRoute;
 import com.example.unknownexplorer.R;
+import com.example.unknownexplorer.api.NetworkService;
 import com.example.unknownexplorer.db.DBHelper;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ActivityCreateRoute extends AppCompatActivity implements View.OnClickListener {
 
@@ -100,10 +104,10 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                             public void onClick(DialogInterface dialog, int id) {
 
                                 String pointTitle = inputTextPointTitle.getText().toString();
-                                String pointXCoord= inputTextPointXCoord.getText().toString();
-                                String pointYCoord= inputTextPointYCoord.getText().toString();
+                                String pointXCoord = inputTextPointXCoord.getText().toString();
+                                String pointYCoord = inputTextPointYCoord.getText().toString();
 
-                                if (!pointTitle.equals("") && !pointXCoord.equals("") && !pointYCoord.equals("")){
+                                if (!pointTitle.equals("") && !pointXCoord.equals("") && !pointYCoord.equals("")) {
 
                                     // Добавляем tableRow в TableLayout на основном экране
                                     TableRow tableRow = new TableRow(context);
@@ -152,8 +156,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                                             tablePoints.removeView((View) colTableRow.getParent());
                                         }
                                     });
-                                }
-                                else{
+                                } else {
                                     Toast toast = Toast.makeText(getApplicationContext(),
                                             "Введите все данные точки маршрута.",
                                             Toast.LENGTH_SHORT);
@@ -170,12 +173,6 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                         });
 
 
-        // создаем объект для данных
-        ContentValues routeContent = new ContentValues();
-
-        // подключаемся к БД
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
         switch (v.getId()) {
 
             case R.id.button_create_route:
@@ -185,34 +182,71 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                 String routeTypeDisplacement = spinnerTypeOfDisplacement.getSelectedItem().toString();
 
                 if (!routeTitle.equals("") && !routeDescription.equals("") && !routeInterest.equals("") && !routeTypeDisplacement.equals("")) {
-                    Log.d("insertRoute", "--- Insert in mytable: ---");
 
-                    // подготовим данные для вставки в виде пар: наименование столбца - значение
-                    routeContent.put("userId", USER_ID);
-                    routeContent.put("title", routeTitle);
-                    routeContent.put("description", routeDescription);
-                    routeContent.put("interest", routeInterest);
-                    routeContent.put("type", routeTypeDisplacement);
-                    // вставляем запись и получаем ее ID
-                    long routeID = db.insert("routes", null, routeContent);
-                    Log.d("insertRoute", "row inserted, ID = " + routeID);
+                    PojoRoute createRoute = new PojoRoute();
+                    createRoute.setTitle(routeTitle);
+                    createRoute.setDescription(routeDescription);
+                    createRoute.setInterest(routeInterest);
+                    createRoute.setType(routeTypeDisplacement);
 
-                    for (int i = 0; i < tablePoints.getChildCount(); i++) {
-                        ContentValues pointContent = new ContentValues();
-                        pointContent.put("routeId", routeID);
-                        @SuppressLint("ResourceType") TextView titleColInTablePoints = tablePoints.getChildAt(i).findViewById(4);
-                        @SuppressLint("ResourceType") TextView xCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(3);
-                        @SuppressLint("ResourceType") TextView yCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(2);
-                        pointContent.put("title", titleColInTablePoints.getText().toString());
-                        pointContent.put("xCoord", xCoordColInTablePoints.getText().toString());
-                        pointContent.put("yCoord", yCoordColInTablePoints.getText().toString());
-                        long pointID = db.insert("points", null, pointContent);
-                        Log.d("insertPoint", "row inserted, ID = " + pointID + " into route, ID = " + routeID);
-                    }
-//                  Todo: issue при клике на кнопку "my routes" в навигации, возвращает на создание маршрута.
-                    Intent intent = new Intent("ActivityMainNavigation");
-                    this.finish();
-                    startActivity(intent);
+                    NetworkService.getInstance()
+                            .getJSONApi()
+                            .createNewRoute(USER_ID, createRoute)
+                            .enqueue(new Callback<PojoRoute>() {
+                                @Override
+                                public void onResponse(Call<PojoRoute> call, Response<PojoRoute> response) {
+
+                                    Log.d("TEST", "onResponse: TEST" + response.body().getId());
+
+                                    for (int i = 0; i < tablePoints.getChildCount(); i++) {
+
+                                        @SuppressLint("ResourceType") TextView titleColInTablePoints = tablePoints.getChildAt(i).findViewById(4);
+                                        @SuppressLint("ResourceType") TextView xCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(3);
+                                        @SuppressLint("ResourceType") TextView yCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(2);
+
+
+                                        PojoPoint createPoint = new PojoPoint();
+                                        createPoint.setTitle(titleColInTablePoints.getText().toString());
+                                        NetworkService.getInstance()
+                                                .getJSONApi()
+                                                .createNewPoint(response.body().getId(), createPoint)
+                                                .enqueue(new Callback<PojoPoint>() {
+
+                                                    @Override
+                                                    public void onResponse(Call<PojoPoint> call, Response<PojoPoint> response) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<PojoPoint> call, Throwable t) {
+
+                                                    }
+                                                });
+                                    }
+
+                                    Toast toast = Toast.makeText(getApplicationContext(),
+                                            "Марщрут создан.",
+                                            Toast.LENGTH_SHORT);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
+                                }
+
+                                @Override
+                                public void onFailure(Call<PojoRoute> call, Throwable t) {
+                                    Toast toast = Toast.makeText(getApplicationContext(),
+                                            "Проблемы соединения с сервером",
+                                            Toast.LENGTH_SHORT);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
+                                }
+
+                            });
+
+
+//TODO
+//                    Intent intent = new Intent("ActivityMainNavigation");
+//                    this.finish();
+//                    startActivity(intent);
                 } else {
                     //создаём и отображаем текстовое уведомление
                     Toast toast = Toast.makeText(getApplicationContext(),

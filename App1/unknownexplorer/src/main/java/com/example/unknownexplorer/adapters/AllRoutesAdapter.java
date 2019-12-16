@@ -60,15 +60,15 @@ public class AllRoutesAdapter extends RecyclerView.Adapter<AllRoutesAdapter.Rout
     private List<Route> routeList = new ArrayList<>();
 
     public void setItems(Collection<Route> routes) {
-        clearItems();
+//        clearItems();
         Log.d("test", "setItems from RoutersAdapter");
         routeList.addAll(routes);
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     public void clearItems() {
         routeList.clear();
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
 

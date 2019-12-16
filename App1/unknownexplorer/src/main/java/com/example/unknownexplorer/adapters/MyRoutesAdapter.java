@@ -65,12 +65,12 @@ public class MyRoutesAdapter extends RecyclerView.Adapter<MyRoutesAdapter.MyRout
         clearItems();
         Log.d("test", "setItems from RoutersAdapter");
         routeList.addAll(routes);
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     public void clearItems() {
         routeList.clear();
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     static class MyRoutesViewHolder extends RecyclerView.ViewHolder {
@@ -95,7 +95,7 @@ public class MyRoutesAdapter extends RecyclerView.Adapter<MyRoutesAdapter.MyRout
             ratingTextView = itemView.findViewById(R.id.text_rating_router_my_routes);
 
 
-            //по клику на элемент отправляем в MyRoutesFragment наш Route
+            //по клику на элемент отправляем в MyRoutesFragment наш PojoRoute
             itemView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

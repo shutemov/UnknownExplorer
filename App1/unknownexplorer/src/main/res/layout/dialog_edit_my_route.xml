@@ -96,9 +96,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:hint="name"
-                        android:inputType="textPersonName"
-                        android:text="Name" />
+                        android:hint="Title"
+                        android:inputType="textPersonName" />
 
                     <EditText
                         android:id="@+id/input_point_x_coord"
@@ -107,8 +106,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="x coord"
-                        android:inputType="textPersonName"
-                        android:text="x coord" />
+                        android:inputType="none|number" />
 
                     <EditText
                         android:id="@+id/input_point_y_coord"
@@ -117,8 +115,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="y coord"
-                        android:inputType="textPersonName"
-                        android:text="y coord" />
+                        android:inputType="none|number" />
 
                     <Button
                         android:id="@+id/add_point_button_edit_route"
