@@ -77,8 +77,6 @@ public class PointsOfRouteAdapter extends RecyclerView.Adapter<PointsOfRouteAdap
         private TextView pointTitle;
         private TextView xCoord;
         private TextView yCoord;
-        private Button deleteButton;
-
 
 
         public PointsViewHolder(View itemView){
@@ -86,7 +84,7 @@ public class PointsOfRouteAdapter extends RecyclerView.Adapter<PointsOfRouteAdap
             pointTitle = itemView.findViewById(R.id.name_point);
             xCoord = itemView.findViewById(R.id.x_coord_point);
             yCoord = itemView.findViewById(R.id.y_coord_point);
-            deleteButton = itemView.findViewById(R.id.delete_button_point);
+            Button deleteButton = itemView.findViewById(R.id.delete_button_point);
 
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override

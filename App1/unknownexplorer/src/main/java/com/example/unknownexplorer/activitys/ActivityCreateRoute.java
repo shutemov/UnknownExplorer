@@ -23,12 +23,12 @@ import com.example.unknownexplorer.POJO.PojoPoint;
 import com.example.unknownexplorer.POJO.PojoRoute;
 import com.example.unknownexplorer.R;
 import com.example.unknownexplorer.api.NetworkService;
-import com.example.unknownexplorer.db.DBHelper;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@SuppressWarnings("deprecation")
 public class ActivityCreateRoute extends AppCompatActivity implements View.OnClickListener {
 
     final Context context = this;
@@ -42,17 +42,13 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
     private Spinner spinnerInterest;
     private Spinner spinnerTypeOfDisplacement;
     private TableLayout tablePoints;
-    private Button buttonCreatePoint;
-    private Button buttonCreateRoute;
     private Button deletePoint;
-
-    // бд
-    DBHelper dbHelper;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_create_route);
 
         //находим id элементов
@@ -61,39 +57,42 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
         spinnerInterest = findViewById(R.id.spinner_interest_activity_create_route);
         spinnerTypeOfDisplacement = findViewById(R.id.spinner_type_displacement_activity_create_route);
         tablePoints = findViewById(R.id.table_layout_points_activity_create_route);
-        buttonCreatePoint = findViewById(R.id.button_add_point_route);
-        buttonCreateRoute = findViewById(R.id.button_create_route);
+        Button buttonCreatePoint = findViewById(R.id.button_add_point_route);
+        Button buttonCreateRoute = findViewById(R.id.button_create_route);
+
 
         //устанавливаем листенры на кнопки
         buttonCreatePoint.setOnClickListener(this);
         buttonCreateRoute.setOnClickListener(this);
 
+
         //получаем данные из ActivityMainNavigation
         USER_ID = getIntent().getIntExtra("userId", -1);
         Log.d("ActivityCreateRoute", "onCreate: " + USER_ID);
-
-
-        // создаем объект для создания и управления версиями БД
-        dbHelper = new DBHelper(this);
     }
 
 
     @Override
     public void onClick(View v) {
+
         //Получаем вид с файла dialog_create_point_activity_create_route.xml, который применим для диалогового окна:
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View promptsView = layoutInflater.inflate(R.layout.dialog_create_point_activity_create_route, null);
 
+
         //Создаем AlertDialog
         AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(context);
 
+
         //Настраиваем dialog_create_point_activity_create_route.xml для нашего AlertDialog:
         mDialogBuilder.setView(promptsView);
+
 
         //Настраиваем отображение полей для ввода текста в открытом диалоге:
         final EditText inputTextPointTitle = promptsView.findViewById(R.id.edit_text_title_dialog_create_point);
         final EditText inputTextPointXCoord = promptsView.findViewById(R.id.edit_x_coord_dialog_create_point);
         final EditText inputTextPointYCoord = promptsView.findViewById(R.id.edit_y_coord_dialog_create_point);
+
 
         //Настраиваем сообщение в диалоговом окне:
         mDialogBuilder
@@ -108,6 +107,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                                 String pointYCoord = inputTextPointYCoord.getText().toString();
 
                                 if (!pointTitle.equals("") && !pointXCoord.equals("") && !pointYCoord.equals("")) {
+
 
                                     // Добавляем tableRow в TableLayout на основном экране
                                     TableRow tableRow = new TableRow(context);
@@ -140,6 +140,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                                     deletePoint.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                                     deletePoint.setId(1);
 
+
                                     //добавляем элементы в tableRow
                                     tableRow.addView(title);
                                     tableRow.addView(X);
@@ -147,11 +148,11 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                                     tableRow.addView(deletePoint);
                                     tablePoints.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
 
+
                                     //удаление точки маршрута из таблицы
                                     deletePoint.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            //получаем к
                                             final View colTableRow = v.findViewById(1);
                                             tablePoints.removeView((View) colTableRow.getParent());
                                         }
@@ -174,7 +175,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
 
 
         switch (v.getId()) {
-
+            //кнопка создания маршрута.
             case R.id.button_create_route:
                 String routeTitle = editTextTitle.getText().toString();
                 String routeDescription = editTextDescription.getText().toString();
@@ -183,12 +184,14 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
 
                 if (!routeTitle.equals("") && !routeDescription.equals("") && !routeInterest.equals("") && !routeTypeDisplacement.equals("")) {
 
+                    //формируем данные для запроса.
                     PojoRoute createRoute = new PojoRoute();
                     createRoute.setTitle(routeTitle);
                     createRoute.setDescription(routeDescription);
                     createRoute.setInterest(routeInterest);
                     createRoute.setType(routeTypeDisplacement);
 
+                    //делаем запрос.
                     NetworkService.getInstance()
                             .getJSONApi()
                             .createNewRoute(USER_ID, createRoute)
@@ -196,39 +199,60 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                                 @Override
                                 public void onResponse(Call<PojoRoute> call, Response<PojoRoute> response) {
 
-                                    Log.d("TEST", "onResponse: TEST" + response.body().getId());
+                                    if (tablePoints.getChildCount() != 0) {
 
-                                    for (int i = 0; i < tablePoints.getChildCount(); i++) {
+                                        //для каждой точки запускаем запрос.
+                                        for (int i = 0; i < tablePoints.getChildCount(); i++) {
 
-                                        @SuppressLint("ResourceType") TextView titleColInTablePoints = tablePoints.getChildAt(i).findViewById(4);
-                                        @SuppressLint("ResourceType") TextView xCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(3);
-                                        @SuppressLint("ResourceType") TextView yCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(2);
+                                            @SuppressLint("ResourceType") TextView titleColInTablePoints = tablePoints.getChildAt(i).findViewById(4);
+                                            @SuppressLint("ResourceType") TextView xCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(3);
+                                            @SuppressLint("ResourceType") TextView yCoordColInTablePoints = tablePoints.getChildAt(i).findViewById(2);
 
 
-                                        PojoPoint createPoint = new PojoPoint();
-                                        createPoint.setTitle(titleColInTablePoints.getText().toString());
-                                        NetworkService.getInstance()
-                                                .getJSONApi()
-                                                .createNewPoint(response.body().getId(), createPoint)
-                                                .enqueue(new Callback<PojoPoint>() {
+                                            PojoPoint createPoint = new PojoPoint();
 
-                                                    @Override
-                                                    public void onResponse(Call<PojoPoint> call, Response<PojoPoint> response) {
+                                            createPoint.setTitle(titleColInTablePoints.getText().toString());
+                                            createPoint.setXCoord(xCoordColInTablePoints.getText().toString());
+                                            createPoint.setYCoord(yCoordColInTablePoints.getText().toString());
 
-                                                    }
+                                            final int finalI = i;
+                                            NetworkService.getInstance()
+                                                    .getJSONApi()
+                                                    .createNewPoint(response.body().getId(), createPoint)
+                                                    .enqueue(new Callback<PojoPoint>() {
 
-                                                    @Override
-                                                    public void onFailure(Call<PojoPoint> call, Throwable t) {
+                                                        @Override
+                                                        public void onResponse(Call<PojoPoint> call, Response<PojoPoint> response) {
+                                                            //если последний запрос выполнился, то маршрут создан.
+                                                            if (finalI == (tablePoints.getChildCount() - 1) && call.isExecuted()) {
 
-                                                    }
-                                                });
+                                                                Toast toast = Toast.makeText(getApplicationContext(),
+                                                                        "Марщрут создан.",
+                                                                        Toast.LENGTH_SHORT);
+                                                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                                                toast.show();
+                                                                finish();
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<PojoPoint> call, Throwable t) {
+                                                            Toast toast = Toast.makeText(getApplicationContext(),
+                                                                    t.getMessage(),
+                                                                    Toast.LENGTH_SHORT);
+                                                            toast.setGravity(Gravity.CENTER, 0, 0);
+                                                            toast.show();
+                                                            finish();
+                                                        }
+                                                    });
+                                        }
+                                    } else {
+                                        Toast toast = Toast.makeText(getApplicationContext(),
+                                                "Введите все данные и не менее 1 точки маршрута.",
+                                                Toast.LENGTH_SHORT);
+                                        toast.setGravity(Gravity.CENTER, 0, 0);
+                                        toast.show();
                                     }
-
-                                    Toast toast = Toast.makeText(getApplicationContext(),
-                                            "Марщрут создан.",
-                                            Toast.LENGTH_SHORT);
-                                    toast.setGravity(Gravity.CENTER, 0, 0);
-                                    toast.show();
                                 }
 
                                 @Override
@@ -239,14 +263,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                                     toast.setGravity(Gravity.CENTER, 0, 0);
                                     toast.show();
                                 }
-
                             });
-
-
-//TODO
-//                    Intent intent = new Intent("ActivityMainNavigation");
-//                    this.finish();
-//                    startActivity(intent);
                 } else {
                     //создаём и отображаем текстовое уведомление
                     Toast toast = Toast.makeText(getApplicationContext(),
@@ -257,13 +274,11 @@ public class ActivityCreateRoute extends AppCompatActivity implements View.OnCli
                 }
                 break;
             case R.id.button_add_point_route:
-                //Создаем AlertDialog:
+
+                //Создаем и отображаем AlertDialog:
                 AlertDialog alertDialog = mDialogBuilder.create();
-                //и отображаем его:
                 alertDialog.show();
                 break;
         }
-
     }
-
 }

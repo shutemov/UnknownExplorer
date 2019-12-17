@@ -3,6 +3,8 @@ package com.example.unknownexplorer.POJO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class PojoRoute {
     @SerializedName("id")
     @Expose
@@ -27,6 +29,18 @@ public class PojoRoute {
     @SerializedName("type")
     @Expose
     private String type;
+
+    @SerializedName("points")
+    @Expose
+    private ArrayList<PojoPoint> points;
+
+    public ArrayList<PojoPoint> getPoints() {
+        return points;
+    }
+
+    public void setPoints(ArrayList<PojoPoint> points) {
+        this.points = points;
+    }
 
     public String getDescription() {
         return description;

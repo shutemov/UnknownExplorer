@@ -3,7 +3,7 @@ package com.example.unknownexplorer.POJO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class User {
+public class PojoUser {
     @SerializedName("id")
     @Expose
     private int id;

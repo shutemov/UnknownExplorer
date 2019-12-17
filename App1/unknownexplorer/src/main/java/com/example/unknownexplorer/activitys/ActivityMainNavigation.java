@@ -30,6 +30,16 @@ public class ActivityMainNavigation extends AppCompatActivity implements Navigat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Принимаем userId
+        USER_ID = getIntent().getIntExtra("userId", -1);
+
+        // Принимаем userLogin
+        String USER_LOGIN = getIntent().getStringExtra("userLogin");
+
+        // выводим принятое имя
+        Log.d("intent data", "ID: " + USER_ID + " LOGIN: " + USER_LOGIN);
+
         setContentView(R.layout.activity_main_navigation);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -41,45 +51,28 @@ public class ActivityMainNavigation extends AppCompatActivity implements Navigat
                 Intent intent = new Intent("ActivityCreateRoute");
 
                 //получаем id пользователя
-                int USER_ID = getIntent().getIntExtra("userId", -1);
+//                int USER_ID = getIntent().getIntExtra("userId", -1);
                 intent.putExtra("userId", USER_ID);
                 startActivity(intent);
-                //всплывающая сноска
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
             }
         });
 
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
+
+        // конфигурируем окно навигации.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_all_routes, R.id.nav_my_routes, R.id.nav_exit)
                 .setDrawerLayout(drawer)
                 .build();
 
-//        NavigationView exit = findViewById(R.id.nav_exit);
-//        exit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent("ActivityRegistration"));
-//            }
-//        });
         //отвечает за бергер кнопку и описание вбранного элемента меню.
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        // Принимаем Id
-        USER_ID = getIntent().getIntExtra("userId", -1);
-
-        // Принимаем Login
-        String USER_LOGIN = getIntent().getStringExtra("userLogin");
-
-        // выводим принятое имя
-        Log.d("intent data", "ID: " + USER_ID + " LOGIN: " + USER_LOGIN);
     }
 
     @Override

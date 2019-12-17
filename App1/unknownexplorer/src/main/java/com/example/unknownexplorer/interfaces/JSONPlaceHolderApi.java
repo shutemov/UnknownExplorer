@@ -2,7 +2,7 @@ package com.example.unknownexplorer.interfaces;
 
 import com.example.unknownexplorer.POJO.PojoPoint;
 import com.example.unknownexplorer.POJO.PojoRoute;
-import com.example.unknownexplorer.POJO.User;
+import com.example.unknownexplorer.POJO.PojoUser;
 
 import java.util.List;
 
@@ -14,39 +14,41 @@ import retrofit2.http.Path;
 
 public interface JSONPlaceHolderApi {
     @GET("routes/{id}/points")
-    public Call<PojoRoute> getRouteWithID(@Path("id") int id);
+    Call<PojoRoute> getRouteWithID(@Path("id") int id);
 
     @GET("routes")
-    public Call<List<PojoRoute>> getAllRoutes();
+    Call<List<PojoRoute>> getAllRoutes();
+
+    @POST("routes/{id}")
+    Call<List<PojoRoute>> getRouteById(@Path("id") int id, @Body PojoRoute pojoRoute);
 
     @GET("users/{id}/routes")
-    public Call<List<PojoRoute>> getMyRoutes(@Path("id") int id);
+    Call<List<PojoRoute>> getMyRoutes(@Path("id") int id);
 
     @GET("routes/{id}/points")
-    public Call<List<PojoPoint>> getRoutePoints(@Path("id") int id);
+    Call<List<PojoPoint>> getRoutePoints(@Path("id") int id);
 
     @GET("users/{id}")
-    public Call<User> getUserWithID(@Path("id") int id);
+    Call<PojoUser> getUserById(@Path("id") int id);
 
     @POST("users/check")
-    public Call<User> getUserExist(@Body User data);
+    Call<PojoUser> getUserExist(@Body PojoUser data);
 
     @POST("users")
-    public Call<User> createNewUser(@Body User data);
+    Call<PojoUser> createNewUser(@Body PojoUser data);
 
     @POST("users/{id}/routes")
-    public Call<PojoRoute> createNewRoute(@Path("id") int id, @Body PojoRoute data);
+    Call<PojoRoute> createNewRoute(@Path("id") int id, @Body PojoRoute data);
 
     @POST("routes/{id}/points")
-    public Call<PojoPoint> createNewPoint(@Path("id") int id, @Body PojoPoint data);
+    Call<PojoPoint> createNewPoint(@Path("id") int id, @Body PojoPoint data);
 
     @POST("points/{id}/remove")
-    public Call<PojoPoint> deletePoint(@Path("id") int id, @Body PojoPoint data);
+    Call<PojoPoint> deletePoint(@Path("id") int id);
 
     @POST("routes/{id}/remove")
-    public Call<PojoRoute> deleteRoute(@Path("id") int id, @Body PojoRoute data);
+    Call<PojoRoute> deleteRoute(@Path("id") int id, @Body PojoRoute data);
 
     @POST("routes/{id}/update")
-    public Call<PojoRoute> updateRoute(@Path("id") int id, @Body PojoRoute data);
-
+    Call<PojoRoute> updateRoute(@Path("id") int id, @Body PojoRoute data);
 }

@@ -11,20 +11,26 @@ import androidx.fragment.app.Fragment;
 
 import com.example.unknownexplorer.R;
 
+import java.util.Objects;
+
 public class ExitFragment extends Fragment {
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         View root = inflater.inflate(R.layout.fragment_exit, container, false);
+
         final Button buttonLogout = root.findViewById(R.id.button_logout);
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Objects.requireNonNull(getActivity()).getIntent().removeExtra("userId");
                 getActivity().finish();
             }
         });
+
         return root;
     }
 }

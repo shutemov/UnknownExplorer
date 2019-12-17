@@ -1,7 +1,6 @@
 package com.example.unknownexplorer.fragments;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +24,6 @@ import com.example.unknownexplorer.R;
 import com.example.unknownexplorer.adapters.MyRoutesAdapter;
 import com.example.unknownexplorer.adapters.PointsOfRouteAdapter;
 import com.example.unknownexplorer.api.NetworkService;
-import com.example.unknownexplorer.db.DBHelper;
 import com.example.unknownexplorer.models.Point;
 import com.example.unknownexplorer.models.Route;
 
@@ -40,19 +38,14 @@ import retrofit2.Response;
 public class MyRoutesFragment extends Fragment {
 
 
-    private RecyclerView recyclerViewMyRoutes;
-
     private RecyclerView recyclerViewPoints;
+
     private MyRoutesAdapter myRoutesAdapter;
     private PointsOfRouteAdapter pointsOfRouteAdapter;
-    public static Context context;
-    private int USER_ID;
-    DBHelper dbHelper;
 
+    private int USER_ID;
 
     private void getPoints(long routeId) {
-
-        Log.d("test", "getPoints  from my_routes fragment");
 
         final ArrayList<Point> points = new ArrayList<>();
 
@@ -63,37 +56,35 @@ public class MyRoutesFragment extends Fragment {
                     @Override
                     public void onResponse(Call<List<PojoPoint>> call, Response<List<PojoPoint>> response) {
 
-                        if (response.body().size() == 0) {
-                            Toast toast = Toast.makeText(getContext(),
-                                    "У маршрута нет точек.",
-                                    Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
-                        } else {
+                        if (response.body() != null) {
+
                             for (int i = 0; i < response.body().size(); i++) {
-                                Log.d("load pojoRoutes", "onResponse: " + response.body().get(i).getTitle());
-                                points.add(new Point(
-                                        response.body().get(i).getId(),
-                                        response.body().get(i).getTitle(),
-                                        "1233333",
-                                        "123333"
-                                ));
+
+                                int routeId = response.body().get(i).getId();
+                                String title = response.body().get(i).getTitle();
+                                String xCoord = response.body().get(i).getXCoord();
+                                String yCoord = response.body().get(i).getYCoord();
+
+                                points.add(new Point(routeId, title, xCoord, yCoord));
                             }
 
-                            pointsOfRouteAdapter.setItems(points);
-                            recyclerViewPoints.getAdapter().notifyDataSetChanged();
-
+                        } else {
                             Toast toast = Toast.makeText(getContext(),
-                                    "Точки маршрута загружены.",
+                                    "У маршрута нет точек. ",
                                     Toast.LENGTH_SHORT);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
                         }
+                        pointsOfRouteAdapter.setItems(points);
                     }
 
                     @Override
                     public void onFailure(Call<List<PojoPoint>> call, Throwable t) {
-                        Log.d("load pojoRoutes", "onFailure: " + t.getMessage());
+                        Toast toast = Toast.makeText(getContext(),
+                                t.getMessage(),
+                                Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
                     }
                 });
     }
@@ -101,9 +92,7 @@ public class MyRoutesFragment extends Fragment {
     private void getRoutes() {
 
         final ArrayList<Route> routes = new ArrayList<>();
-        // получаем id пользователя
-        USER_ID = getActivity().getIntent().getExtras().getInt("userId", -1);
-        Log.d("test", "getRoutes from my_routes fragment ID " + USER_ID);
+
         NetworkService.getInstance()
                 .getJSONApi()
                 .getMyRoutes(USER_ID)
@@ -113,33 +102,34 @@ public class MyRoutesFragment extends Fragment {
 
                         if (response.body().size() == 0) {
                             Toast toast = Toast.makeText(getContext(),
-                                    "Вы еще не создали никаких маршртов.",
+                                    "Вы еще не создали ни одного маршрута.",
                                     Toast.LENGTH_SHORT);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
                         } else {
                             for (int i = 0; i < response.body().size(); i++) {
-                                Log.d("load pojoRoutes", "onResponse: " + response.body().get(i).getTitle());
+
                                 routes.add(new Route(
                                         response.body().get(i).getId(),
                                         response.body().get(i).getTitle(),
-                                        "description",
-                                        "interest",
-                                        "type",
-                                        "3x",
+                                        response.body().get(i).getDescription(),
+                                        response.body().get(i).getInterest(),
+                                        response.body().get(i).getType(),
+                                        "~1.5 ч.",
                                         "3/5"
                                 ));
                             }
-                            myRoutesAdapter.setItems(routes);
-                            recyclerViewMyRoutes.getAdapter().notifyDataSetChanged();
+
 
                             Toast toast = Toast.makeText(getContext(),
                                     "Ваши маршруты загружены.",
                                     Toast.LENGTH_SHORT);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
-
                         }
+
+
+                        myRoutesAdapter.setItems(routes);
                     }
 
                     @Override
@@ -149,35 +139,34 @@ public class MyRoutesFragment extends Fragment {
                 });
     }
 
-    ;
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getRoutes();
+    }
 
     public View onCreateView(@NonNull final LayoutInflater inflater,
                              final ViewGroup container, Bundle savedInstanceState) {
 
-        // todo ЗАРЕФАКТОРИТЬ ОБЪЯВЛЕНИЕ ЭЛЕМЕНТОВ
+        USER_ID = getActivity().getIntent().getExtras().getInt("userId", -1);
 
         final View root = inflater.inflate(R.layout.my_routes, container, false);
 
-        recyclerViewMyRoutes = root.findViewById(R.id.my_routes_recycler_view);
+        RecyclerView recyclerViewMyRoutes = root.findViewById(R.id.my_routes_recycler_view);
 
         //получаем recycle item
         View recycler_item = inflater.inflate(R.layout.recycler_item_my_routes, null);
 
-        //устанавливаем recycle item into recycler view
+        //устанавливаем recycle item в recycler view
         recyclerViewMyRoutes.setLayoutManager(new LinearLayoutManager(recycler_item.getContext()));
 
 
         MyRoutesAdapter.OnMyRoutesClickListener myRoutesListener = new MyRoutesAdapter.OnMyRoutesClickListener() {
 
             @Override
-            public void onRouteClick(Route route) {
-
-            }
-
-            @Override
             public void onEditClick(final Route route) {
-                Log.d("onEditClicl", "onEditClick: " + route.getDescription());
 
                 //______________СОЗДАНИЕ ДИАЛОГОВОГО ОКНА РЕДАКТИРОВАНИЯ МАРШРУТА______________
 
@@ -190,31 +179,29 @@ public class MyRoutesFragment extends Fragment {
 
                 //получаем ресайкл вью из вида диалогового окна.
                 recyclerViewPoints = editRouteDialogWindow.findViewById(R.id.recycler_view_edit_route);
-
                 final View pointRecyclerItem = inflater.inflate(R.layout.recycler_item_points_of_my_route, null);
 
                 recyclerViewPoints.setLayoutManager(new LinearLayoutManager(pointRecyclerItem.getContext()));
 
+
+                //TODO исправить баг удаления точки по 2 клику.
+                //создаем слушатель точек маршрута.
                 PointsOfRouteAdapter.OnPointClickListener onPointClickListener = new PointsOfRouteAdapter.OnPointClickListener() {
                     @Override
                     public void onDeletePoint(final Point point) {
 
-                        PojoPoint deletePoint = new PojoPoint();
-                        deletePoint.setTitle(point.getName());
-
                         NetworkService.getInstance()
                                 .getJSONApi()
-                                .deletePoint((int) point.getId(), deletePoint)
+                                .deletePoint(point.getId())
                                 .enqueue(new Callback<PojoPoint>() {
+
                                     @Override
                                     public void onResponse(Call<PojoPoint> call, Response<PojoPoint> response) {
 
-
-                                        recyclerViewPoints.getAdapter().notifyDataSetChanged();
                                         getPoints(route.getId());
 
                                         Toast toast = Toast.makeText(getContext(),
-                                                "Ваши точка удалена.",
+                                                "Ваша точка удалена.",
                                                 Toast.LENGTH_SHORT);
                                         toast.setGravity(Gravity.CENTER, 0, 0);
                                         toast.show();
@@ -222,19 +209,26 @@ public class MyRoutesFragment extends Fragment {
 
                                     @Override
                                     public void onFailure(Call<PojoPoint> call, Throwable t) {
-                                        Log.d("load pojoRoutes", "onFailure: " + t.getMessage());
+                                        Log.d("123", "onFailure: "+t.getMessage());
+                                        Toast toast = Toast.makeText(getContext(),
+                                                t.getMessage(),
+                                                Toast.LENGTH_SHORT);
+                                        toast.setGravity(Gravity.CENTER, 0, 0);
+                                        toast.show();
                                     }
                                 });
-
                     }
                 };
 
-                pointsOfRouteAdapter = new PointsOfRouteAdapter(onPointClickListener, getContext());
 
+                // создаем и устанавливаем адаптер точек маршрута.
+                pointsOfRouteAdapter = new PointsOfRouteAdapter(onPointClickListener, getContext());
                 recyclerViewPoints.setAdapter(pointsOfRouteAdapter);
+
 
                 //загружаем точки маршрута.
                 getPoints(route.getId());
+
 
                 //элементы диалогового окна.
                 final Spinner interestSpinner = editRouteDialogWindow.findViewById(R.id.input_spinner_interest);
@@ -242,15 +236,11 @@ public class MyRoutesFragment extends Fragment {
                 final EditText inputNewTitle = editRouteDialogWindow.findViewById(R.id.input_title);
                 final EditText inputNewDescription = editRouteDialogWindow.findViewById(R.id.input_description);
 
+
                 //TODO: устанавливаем значения из маршрута в элементы диалогового окна (решить проблему вставки значения в спиннеры)
-
-
                 inputNewTitle.setText(route.getTitle());
                 inputNewDescription.setText(route.getDescription());
 
-                //END TODO
-
-                //todo
                 Button buttonAddPoint = editRouteDialogWindow.findViewById(R.id.add_point_button_edit_route);
                 final EditText inputPointName = editRouteDialogWindow.findViewById(R.id.input_point_name);
                 final EditText inputPointXCoord = editRouteDialogWindow.findViewById(R.id.input_point_x_coord);
@@ -260,26 +250,34 @@ public class MyRoutesFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
 
-
+                        //получаем значения элементов из диалогового окна редактирования маршрута для создания новой точки.
                         String pointName = inputPointName.getText().toString();
                         String pointXCoord = inputPointXCoord.getText().toString();
                         String pointYCoord = inputPointYCoord.getText().toString();
 
-
                         if (!pointName.equals("") && !pointXCoord.equals("") && !pointYCoord.equals("")) {
-                            //подключаемся к бд.
 
+
+                            //готовим данные для запроса.
                             PojoPoint newPoint = new PojoPoint();
-                            newPoint.setTitle(inputPointName.getText().toString());
+                            newPoint.setTitle(pointName);
+                            newPoint.setXCoord(pointXCoord);
+                            newPoint.setYCoord(pointYCoord);
+
+
+                            //делаем запрос
+                            int routeid = (int) route.getId();
 
                             NetworkService.getInstance()
                                     .getJSONApi()
-                                    .createNewPoint((int) route.getId(), newPoint)
+                                    .createNewPoint(routeid, newPoint)
                                     .enqueue(new Callback<PojoPoint>() {
                                         @Override
                                         public void onResponse(Call<PojoPoint> call, Response<PojoPoint> response) {
-                                            recyclerViewPoints.getAdapter().notifyDataSetChanged();
+
+                                            //обновляем точки в маршруте.
                                             getPoints(route.getId());
+
 
                                             Toast toast = Toast.makeText(getContext(),
                                                     "Новая точка создана.",
@@ -295,13 +293,10 @@ public class MyRoutesFragment extends Fragment {
                                     });
 
 
-                            //обновляем ресайкл вью
-
                             //очищаем данные воода.
                             inputPointName.setText("");
                             inputPointXCoord.setText("");
                             inputPointYCoord.setText("");
-                            Log.d("add point button", "onClick: " + v);
                         } else {
                             Toast toast = Toast.makeText(getContext(),
                                     "Введите все данные точки маршрута.",
@@ -313,13 +308,14 @@ public class MyRoutesFragment extends Fragment {
                 });
 
 
-                //end todo
-
                 //Создаем AlertDialog
                 final AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(getContext());
 
+
                 //Настраиваем dialog_create_point_activity_create_route.xml для нашего AlertDialog:
                 mDialogBuilder.setView(editRouteDialogWindow);
+
+
                 //Настраиваем сообщение в диалоговом окне:
                 mDialogBuilder
                         .setCancelable(false)
@@ -327,17 +323,16 @@ public class MyRoutesFragment extends Fragment {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
 
-                                        final long routeId = route.getId();
+                                        final int routeId = (int) route.getId();
 
-                                        //получаем значения полей из диалогового окна.
-
+                                        //получаем значения полей из диалогового окна редактирования маршрута.
                                         String newTitle = inputNewTitle.getText().toString();
                                         String newDescription = inputNewDescription.getText().toString();
                                         String inputNewInterest = interestSpinner.getSelectedItem().toString();
                                         String inputNewTypeDisplacement = typeSpinner.getSelectedItem().toString();
 
 
-                                        //TODO: сделать обновление маршрута (ДОДЕЛАТЬ ПОЛНОЕ ОБНОВЛЕНИЕ).
+                                        //готовим данные для запроса.
                                         PojoRoute updateRoute = new PojoRoute();
 
                                         updateRoute.setTitle(newTitle);
@@ -345,13 +340,16 @@ public class MyRoutesFragment extends Fragment {
                                         updateRoute.setInterest(inputNewInterest);
                                         updateRoute.setType(inputNewTypeDisplacement);
 
+
+                                        //делаем запрос.
+//                                        int routeId =(int) route.getId();
                                         NetworkService.getInstance()
                                                 .getJSONApi()
-                                                .updateRoute((int) route.getId(), updateRoute)
+                                                .updateRoute(routeId, updateRoute)
                                                 .enqueue(new Callback<PojoRoute>() {
                                                     @Override
                                                     public void onResponse(Call<PojoRoute> call, Response<PojoRoute> response) {
-                                                        recyclerViewMyRoutes.getAdapter().notifyDataSetChanged();
+
                                                         getRoutes();
 
                                                         Toast toast = Toast.makeText(getContext(),
@@ -363,12 +361,13 @@ public class MyRoutesFragment extends Fragment {
 
                                                     @Override
                                                     public void onFailure(Call<PojoRoute> call, Throwable t) {
-                                                        Log.d("load pojoRoutes", "onFailure: " + t.getMessage());
+                                                        Toast toast = Toast.makeText(getContext(),
+                                                                t.getMessage(),
+                                                                Toast.LENGTH_SHORT);
+                                                        toast.setGravity(Gravity.CENTER, 0, 0);
+                                                        toast.show();
                                                     }
                                                 });
-                                        // запрос на обновление route.
-
-
                                     }
                                 })
                         .setNegativeButton("Cancel",
@@ -377,15 +376,18 @@ public class MyRoutesFragment extends Fragment {
                                         dialog.cancel();
                                     }
                                 });
-                //Создаем AlertDialog:
+
+
+                //Создаем AlertDialog и отображаем его
                 AlertDialog alertDialog = mDialogBuilder.create();
-                //и отображаем его:
                 alertDialog.show();
             }
 
             @Override
             public void onDeleteClick(final Route route) {
                 Log.d("onEditClicl", "onEditClick: " + route.getDescription());
+
+                final int routeId = (int) route.getId();
 
                 //Создаем AlertDialog
                 AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(getContext());
@@ -402,13 +404,11 @@ public class MyRoutesFragment extends Fragment {
                                         deleteRoute.setTitle(route.getTitle());
                                         NetworkService.getInstance()
                                                 .getJSONApi()
-                                                .deleteRoute((int) route.getId(), deleteRoute)
+                                                .deleteRoute(routeId, deleteRoute)
                                                 .enqueue(new Callback<PojoRoute>() {
                                                     @Override
                                                     public void onResponse(Call<PojoRoute> call, Response<PojoRoute> response) {
 
-
-                                                        recyclerViewMyRoutes.getAdapter().notifyDataSetChanged();
                                                         getRoutes();
 
                                                         Toast toast = Toast.makeText(getContext(),
@@ -420,10 +420,13 @@ public class MyRoutesFragment extends Fragment {
 
                                                     @Override
                                                     public void onFailure(Call<PojoRoute> call, Throwable t) {
-                                                        Log.d("load pojoRoutes", "onFailure: " + t.getMessage());
+                                                        Toast toast = Toast.makeText(getContext(),
+                                                                t.getMessage(),
+                                                                Toast.LENGTH_SHORT);
+                                                        toast.setGravity(Gravity.CENTER, 0, 0);
+                                                        toast.show();
                                                     }
                                                 });
-                                        Log.d("delete", "onClick: route was deleted ");
                                     }
                                 })
                         .setNegativeButton("Cancel",
@@ -432,25 +435,22 @@ public class MyRoutesFragment extends Fragment {
                                         dialog.cancel();
                                     }
                                 });
-                //Создаем AlertDialog:
+
+                //Создаем AlertDialog и отображаем его:
                 AlertDialog alertDialog = mDialogBuilder.create();
-                //и отображаем его:
                 alertDialog.show();
             }
         };
 
-        // устанавливаем адаптер
-        myRoutesAdapter = new MyRoutesAdapter(myRoutesListener, this);
 
+        // создаем и устанавливаем адаптер
+        myRoutesAdapter = new MyRoutesAdapter(myRoutesListener, this);
         recyclerViewMyRoutes.setAdapter(myRoutesAdapter);
 
-//        dbHelper = new DBHelper(recyclerViewMyRoutes.getContext());
-
+        //обновляем данные ресайкл вью при создании фрагмента.
         getRoutes();
 
         //возвращаем отображение из фрагмента.
         return root;
     }
-
-
 }
